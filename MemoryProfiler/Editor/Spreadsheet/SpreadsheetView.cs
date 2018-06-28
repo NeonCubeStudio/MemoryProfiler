@@ -115,18 +115,23 @@ namespace MemoryProfilerWindow
                 case Column.Name:
                     if (nativeObject != null) str = nativeObject.name;
                     if (str.Equals("")) str = "unnamed";
+                    if (thing.ignored) str = "<filtered>";
                     break;
                 case Column.Type:
                     str = ThingTypeToString(indexToThingType(id));
+                    if (thing.ignored) str = "<filtered>";
                     break;
                 case Column.Size:
                     str = EditorUtility.FormatBytes(thing.size);
+                    if (thing.ignored) str = "<filtered>";
                     break;
                 case Column.ClassName:
                     if (nativeObject != null) str = nativeObject.className;
+                    if (thing.ignored) str = "<filtered>";
                     break;
                 case Column.InstanceID:
                     if (nativeObject != null) str = nativeObject.instanceID.ToString();
+                    if (thing.ignored) str = "<filtered>";
                     break;
             }
 

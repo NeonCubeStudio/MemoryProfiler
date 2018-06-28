@@ -25,6 +25,9 @@ namespace MemoryProfilerWindow
         [NonSerialized]
         CrawledMemorySnapshot _unpackedCrawl;
 
+        [NonSerialized]
+        CrawledMemorySnapshot _previousUnpackedCrawl;
+
         Vector2 _scrollPosition;
 
         [NonSerialized]
@@ -34,6 +37,7 @@ namespace MemoryProfilerWindow
         internal TreeMapView _treeMapView;
         internal SpreadsheetView _spreadsheetView;
         internal ViewCanvas _viewCanvas;
+        private FilterItems _filterItems;
 
         [MenuItem("Window/MemoryProfiler")]
         static void Create()
@@ -105,6 +109,9 @@ namespace MemoryProfilerWindow
             if (_viewCanvas != null)
                 _viewCanvas.Draw();
 
+            if (_filterItems != null)
+                _filterItems.Draw();
+
             if (_inspector != null)
                 _inspector.Draw();
         }
@@ -122,10 +129,12 @@ namespace MemoryProfilerWindow
 
         void Unpack()
         {
+            _previousUnpackedCrawl = _unpackedCrawl;
             _unpackedCrawl = CrawlDataUnpacker.Unpack(_packedCrawled);
             _inspector = new Inspector(this, _unpackedCrawl, _snapshot);
+            _filterItems = new FilterItems(this, _unpackedCrawl, _previousUnpackedCrawl);
 
-            if(_treeMapView != null)
+            if (_treeMapView != null)
                 _treeMapView.Setup(this, _unpackedCrawl);
             if (_spreadsheetView != null)
                 _spreadsheetView.Setup(this, _unpackedCrawl);

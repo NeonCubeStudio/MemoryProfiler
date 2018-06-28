@@ -12,7 +12,7 @@ namespace MemoryProfilerWindow
     {
         ThingInMemory _selectedThing;
         private ThingInMemory[] _shortestPath;
-        private ShortestPathToRootFinder _shortestPathToRootFinder;
+        internal ShortestPathToRootFinder _shortestPathToRootFinder;
         private static int s_InspectorWidth = 400;
         Vector2 _scrollPosition;
         MemoryProfilerWindow _hostWindow;

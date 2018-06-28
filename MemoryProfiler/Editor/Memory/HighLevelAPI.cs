@@ -38,6 +38,7 @@ namespace MemoryProfilerWindow
         public string caption;
         public ThingInMemory[] references;
         public ThingInMemory[] referencedBy;
+        public bool ignored;
     }
 
     public class ManagedObject : ThingInMemory

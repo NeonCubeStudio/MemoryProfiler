@@ -19,7 +19,7 @@ namespace MemoryProfilerWindow
             if (_hostWindow == null)
                 return;
 
-            _canvas = new Rect(0f, _hostWindow.topMargin, _hostWindow.position.width - _hostWindow._inspector.width, _hostWindow.position.height - _hostWindow.topMargin);
+            _canvas = new Rect(0f, _hostWindow.topMargin, _hostWindow.position.width - _hostWindow._inspector.width, _hostWindow.position.height - (_hostWindow.topMargin * 2));
             GUILayout.BeginArea(_canvas);
             GUILayout.BeginHorizontal();
 

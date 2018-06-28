@@ -122,7 +122,7 @@ namespace MemoryProfilerWindow
             RefreshCachedRects(false);
         }
 
-        void RefreshCaches()
+        internal void RefreshCaches()
         {
             _items.Clear();
             _groups.Clear();
