@@ -367,8 +367,6 @@ public class ZoomArea
     {
         return (
             (Event.current.button == 1 && Event.current.alt) // right+alt drag
-            //|| (Event.current.button == 0 && Event.current.command) // left+commend drag
-            //|| (Event.current.button == 2 && Event.current.command) // middle+command drag
 
             );
     }
@@ -426,7 +424,6 @@ public class ZoomArea
                 }
                 break;
             case EventType.mouseUp:
-                //Debug.Log("mouse-up!");
                 if (GUIUtility.hotControl == id)
                 {
                     GUIUtility.hotControl = 0;
@@ -434,7 +431,6 @@ public class ZoomArea
                     // If we got the mousedown, the mouseup is ours as well
                     // (no matter if the click was in the area or not)
                     m_MouseDownPosition = new Vector2(-1000000, -1000000);
-                    //Event.current.Use();
                 }
                 break;
             case EventType.mouseDrag:
@@ -464,10 +460,6 @@ public class ZoomArea
                 Event.current.Use();
                 break;
         }
-    }
-
-    public void EndViewGUI()
-    {
     }
 
     private void Pan()

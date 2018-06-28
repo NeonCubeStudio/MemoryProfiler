@@ -333,22 +333,6 @@ namespace MemoryProfilerWindow
             return objectCache[address];
         }
 
-        /*
-        private Item FindItemPointedToByManagedFieldAt(BytesAndOffset bytesAndOffset)
-        {
-            var stringAddress = _primitiveValueReader.ReadPointer(bytesAndOffset);
-            return
-                _items.FirstOrDefault(i =>
-                    {
-                        var m = i._thingInMemory as ManagedObject;
-                        if (m != null)
-                        {
-                            return m.address == stringAddress;
-                        }
-                        return false;
-                    });
-        }*/
-
         private void DrawLinks(IEnumerable<UInt64> pointers)
         {
             DrawLinks(pointers.Select(p => GetThingAt(p)));

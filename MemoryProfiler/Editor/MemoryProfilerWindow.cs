@@ -38,11 +38,6 @@ namespace MemoryProfilerWindow
             EditorWindow.GetWindow<MemoryProfilerWindow>();
         }
 
-        [MenuItem("Window/MemoryProfilerInspect")]
-        static void Inspect()
-        {
-        }
-
         public void OnDestroy()
         {
             UnityEditor.MemoryProfiler.MemorySnapshot.OnSnapshotReceived -= IncomingSnapshot;
@@ -105,8 +100,6 @@ namespace MemoryProfilerWindow
                 _treeMapView.Draw();
             if (_inspector != null)
                 _inspector.Draw();
-
-            //RenderDebugList();
         }
 
         public void SelectThing(ThingInMemory thing)
@@ -118,28 +111,6 @@ namespace MemoryProfilerWindow
         public void SelectGroup(Group group)
         {
             _treeMapView.SelectGroup(group);
-        }
-
-        private void RenderDebugList()
-        {
-            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
-
-            foreach (var thing in _unpackedCrawl.allObjects)
-            {
-                var mo = thing as ManagedObject;
-                if (mo != null)
-                    GUILayout.Label("MO: " + mo.typeDescription.name);
-
-                var gch = thing as GCHandle;
-                if (gch != null)
-                    GUILayout.Label("GCH: " + gch.caption);
-
-                var sf = thing as StaticFields;
-                if (sf != null)
-                    GUILayout.Label("SF: " + sf.typeDescription.name);
-            }
-
-            GUILayout.EndScrollView();
         }
 
         void Unpack()

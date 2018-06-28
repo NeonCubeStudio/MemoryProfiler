@@ -61,8 +61,6 @@ namespace MemoryProfilerWindow
             HandleMouseClick();
             RenderTreemap();
             GUI.EndGroup();
-
-            _ZoomArea.EndViewGUI();
         }
 
         private void OnHoveredGroupChanged()
