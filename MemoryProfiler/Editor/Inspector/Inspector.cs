@@ -56,6 +56,11 @@ namespace MemoryProfilerWindow
             GUILayout.BeginArea(new Rect(_hostWindow.position.width - s_InspectorWidth, 25, s_InspectorWidth, _hostWindow.position.height - 25f));
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
 
+            if (_unpackedCrawl != null)
+            {
+                GUILayout.Label(string.Format("Total memory: {0}", EditorUtility.FormatBytes(_unpackedCrawl.totalSize)));
+            }
+
             if (_selectedThing == null)
                 GUILayout.Label("Select an object to see more info");
             else
