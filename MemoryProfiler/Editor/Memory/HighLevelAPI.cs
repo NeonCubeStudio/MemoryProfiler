@@ -66,6 +66,5 @@ namespace MemoryProfilerWindow
     internal class StaticFields : ThingInMemory
     {
         public TypeDescription typeDescription;
-        public byte[] storage;
     }
 }

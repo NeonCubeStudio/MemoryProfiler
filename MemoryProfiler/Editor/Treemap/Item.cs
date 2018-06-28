@@ -14,7 +14,6 @@ namespace Assets.Editor.Treemap
     {
         internal Group _group;
         internal Rect _position;
-        internal int _index;
 
         internal ThingInMemory _thingInMemory;
 
