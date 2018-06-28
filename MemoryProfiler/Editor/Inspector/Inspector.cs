@@ -155,16 +155,15 @@ namespace MemoryProfilerWindow
         private Texture2D GetTexture(NativeUnityEngineObject nativeObject)
         {
             // If the texture has a name, try to match it to a loaded object
-            if(!string.IsNullOrEmpty(nativeObject.name))
+            if (!string.IsNullOrEmpty(nativeObject.name))
             {
                 Texture2D[] loadedTextures = Resources.FindObjectsOfTypeAll<Texture2D>();
 
-                for (int i = 0; i < loadedTextures.Length; i++) 
+                for (int i = 0; i < loadedTextures.Length; i++)
                 {
-                    if(loadedTextures[i].name == nativeObject.name)
-                    {
-                        return loadedTextures[i];
-                    }
+                    if (!loadedTextures[i].name.Equals(nativeObject.name)) continue;
+                    if (loadedTextures[i].GetInstanceID() != nativeObject.instanceID) continue;
+                    return loadedTextures[i];
                 }
             }
             // None matched
