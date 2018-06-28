@@ -29,6 +29,7 @@ namespace MemoryProfilerWindow
 
         [NonSerialized]
         private bool _registered = false;
+        internal float topMargin = 25f;
         public Inspector _inspector;
         TreeMapView _treeMapView;
 

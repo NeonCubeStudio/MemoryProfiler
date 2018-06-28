@@ -50,8 +50,8 @@ namespace MemoryProfilerWindow
         {
             if (_hostWindow == null)
                 return;
-            
-            Rect r = new Rect(0f, 25f, _hostWindow.position.width - _hostWindow._inspector.width, _hostWindow.position.height - 25f);
+
+            Rect r = new Rect(0f, _hostWindow.topMargin, _hostWindow.position.width - _hostWindow._inspector.width, _hostWindow.position.height - _hostWindow.topMargin);
 
             _ZoomArea.rect = r;
             _ZoomArea.BeginViewGUI();
