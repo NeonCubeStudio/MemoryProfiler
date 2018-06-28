@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.MemoryProfiler;
-using System;
 using UnityEngine;
 
 namespace MemoryProfilerWindow
