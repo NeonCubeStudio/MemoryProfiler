@@ -1,5 +1,4 @@
 using System;
-using Assets.Editor.Treemap;
 using UnityEditor;
 using UnityEngine;
 using UnityEditor.MemoryProfiler;

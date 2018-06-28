@@ -5,7 +5,7 @@ using System.Text;
 using UnityEditor.Graphs;
 using UnityEngine;
 
-namespace Assets.Editor.Treemap
+namespace Treemap
 {
     internal interface ITreemapRenderable
     {

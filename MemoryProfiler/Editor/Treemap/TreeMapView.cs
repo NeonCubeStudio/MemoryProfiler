@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using Treemap;
 using UnityEditor;
-using Assets.Editor.Treemap;
 using System.Linq;
 using UnityEngine.UI;
 
