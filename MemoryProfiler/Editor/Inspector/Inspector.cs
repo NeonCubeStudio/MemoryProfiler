@@ -10,6 +10,8 @@ namespace MemoryProfilerWindow
 {
     public class Inspector
     {
+        Stack<ThingInMemory> _backSelected = new Stack<ThingInMemory>();
+        Stack<ThingInMemory> _nextSelected = new Stack<ThingInMemory>();
         ThingInMemory _selectedThing;
         private ThingInMemory[] _shortestPath;
         internal ShortestPathToRootFinder _shortestPathToRootFinder;
@@ -48,6 +50,10 @@ namespace MemoryProfilerWindow
         public void SelectThing(ThingInMemory thing)
         {
             _selectedThing = thing;
+
+            if (_backSelected.Count == 0 || _selectedThing != _backSelected.Peek())
+                _backSelected.Push(_selectedThing);
+
             _shortestPath = _shortestPathToRootFinder.FindFor(thing);
         }
 
@@ -55,6 +61,28 @@ namespace MemoryProfilerWindow
         {
             GUILayout.BeginArea(new Rect(_hostWindow.position.width - s_InspectorWidth, _hostWindow.topMargin, s_InspectorWidth, _hostWindow.position.height - _hostWindow.topMargin));
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
+
+            GUILayout.BeginHorizontal();
+            GUI.enabled = _backSelected.Count > 1;
+			if (GUILayout.Button(string.Format("Back ({0})", Math.Max(0,_backSelected.Count-1))))
+			{
+                _backSelected.Pop();
+
+                if (_nextSelected.Count == 0 || _backSelected.Peek() != _nextSelected.Peek())
+                    _nextSelected.Push(_backSelected.Peek());
+
+                _hostWindow.SelectThing(_backSelected.Peek());
+			}
+			GUI.enabled = true;
+
+            GUI.enabled = _nextSelected.Count > 1;
+            if (GUILayout.Button(string.Format("Next ({0})", Math.Max(0,_nextSelected.Count - 1))))
+            {
+                _nextSelected.Pop();
+                _hostWindow.SelectThing(_nextSelected.Peek());
+            }
+            GUI.enabled = true;
+            GUILayout.EndHorizontal();
 
             if (_unpackedCrawl != null)
             {
