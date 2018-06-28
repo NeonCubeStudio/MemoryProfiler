@@ -72,12 +72,12 @@ namespace MemoryProfilerWindow
                     GUILayout.Space(5);
                     EditorGUILayout.LabelField("Name", nativeObject.name);
                     EditorGUILayout.LabelField("ClassName", nativeObject.className);
+                    EditorGUILayout.LabelField("Memory amount", EditorUtility.FormatBytes(_selectedThing.size));
                     EditorGUILayout.LabelField("instanceID", nativeObject.instanceID.ToString());
                     EditorGUILayout.LabelField("isDontDestroyOnLoad", nativeObject.isDontDestroyOnLoad.ToString());
                     EditorGUILayout.LabelField("isPersistent", nativeObject.isPersistent.ToString());
                     EditorGUILayout.LabelField("isManager", nativeObject.isManager.ToString());
-                    EditorGUILayout.LabelField("hideFlags", nativeObject.hideFlags.ToString());
-                    EditorGUILayout.LabelField("hideFlags", nativeObject.size.ToString());
+                    EditorGUILayout.LabelField("hideFlags", nativeObject.hideFlags.ToString());                    
                     DrawSpecificTexture2D(nativeObject);
                 }
 
