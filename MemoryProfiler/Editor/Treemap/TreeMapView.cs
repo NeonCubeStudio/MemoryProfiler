@@ -10,9 +10,9 @@ using UnityEngine.UI;
 
 namespace MemoryProfilerWindow
 {
-    public class TreeMapView
+    internal class TreeMapView
     {
-        CrawledMemorySnapshot _unpackedCrawl;
+        private CrawledMemorySnapshot _unpackedCrawl;
         private ZoomArea _ZoomArea;
         private Dictionary<string, Group> _groups = new Dictionary<string, Group>();
         private List<Item> _items = new List<Item>();
@@ -21,11 +21,11 @@ namespace MemoryProfilerWindow
         private Group _selectedGroup;
         private Item _mouseDownItem;
 
-        MemoryProfilerWindow _hostWindow;
+        private MemoryProfilerWindow _hostWindow;
 
         private Vector2 mouseTreemapPosition { get { return _ZoomArea.ViewToDrawingTransformPoint(Event.current.mousePosition); } }
 
-        public void Setup(MemoryProfilerWindow hostWindow, CrawledMemorySnapshot _unpackedCrawl)
+        internal void Setup(MemoryProfilerWindow hostWindow, CrawledMemorySnapshot _unpackedCrawl)
         {
             this._unpackedCrawl = _unpackedCrawl;
             this._hostWindow = hostWindow;
@@ -46,7 +46,7 @@ namespace MemoryProfilerWindow
             RefreshMesh();
         }
 
-        public void Draw()
+        internal void Draw()
         {
             if (_hostWindow == null)
                 return;
@@ -108,14 +108,14 @@ namespace MemoryProfilerWindow
             }
         }
 
-        public void SelectThing(ThingInMemory thing)
+        internal void SelectThing(ThingInMemory thing)
         {
             _selectedItem = _items.First(i => i._thingInMemory == thing);
             _selectedGroup = _selectedItem._group;
             RefreshCachedRects(false);
         }
 
-        public void SelectGroup(Group group)
+        internal void SelectGroup(Group group)
         {
             _selectedItem = null;
             _selectedGroup = group;
@@ -190,7 +190,7 @@ namespace MemoryProfilerWindow
             RefreshMesh();
         }
 
-        public void CleanupMeshes ()
+        internal void CleanupMeshes ()
         {
             if (_cachedMeshes == null) {
                 _cachedMeshes = new List<Mesh> ();
@@ -278,7 +278,7 @@ namespace MemoryProfilerWindow
             }
         }
 
-        public void RenderTreemap()
+        internal void RenderTreemap()
         {
             if (_cachedMeshes == null)
                 return;
@@ -354,7 +354,7 @@ namespace MemoryProfilerWindow
             }
         }
 
-        public string GetGroupName(ThingInMemory thing)
+        internal string GetGroupName(ThingInMemory thing)
         {
 			if (thing is NativeUnityEngineObject)
 				return (thing as NativeUnityEngineObject).className ?? "MissingName";

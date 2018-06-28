@@ -5,22 +5,22 @@ using UnityEditor.MemoryProfiler;
 
 namespace MemoryProfilerWindow
 {
-    enum PointerType
+    internal enum PointerType
     {
         Reference,
         RawPointer
     }
 
-    struct ThingToProfile
+    internal struct ThingToProfile
     {
-        public readonly PointerType type;
-        public readonly BytesAndOffset bytesAndOffset;
-        public readonly ulong objectPointer;
-        public readonly TypeDescription typeDescription;
-        public readonly bool useStaticFields;
-        public readonly int indexOfFrom;
+        internal readonly PointerType type;
+        internal readonly BytesAndOffset bytesAndOffset;
+        internal readonly ulong objectPointer;
+        internal readonly TypeDescription typeDescription;
+        internal readonly bool useStaticFields;
+        internal readonly int indexOfFrom;
 
-        public ThingToProfile(ulong objectPtr, int refIndexOfFrom)
+        internal ThingToProfile(ulong objectPtr, int refIndexOfFrom)
         {
             type = PointerType.Reference;
             objectPointer = objectPtr;
@@ -31,7 +31,7 @@ namespace MemoryProfilerWindow
             bytesAndOffset = new BytesAndOffset();
         }
 
-        public ThingToProfile(TypeDescription typeDesc, BytesAndOffset inBytesAndOffset, bool inUseStaticFields, int inIndexOfFrom)
+        internal ThingToProfile(TypeDescription typeDesc, BytesAndOffset inBytesAndOffset, bool inUseStaticFields, int inIndexOfFrom)
         {
             type = PointerType.RawPointer;
             typeDescription = typeDesc;
@@ -52,7 +52,7 @@ namespace MemoryProfilerWindow
         private FieldDescription[][] _instanceFields;
         private FieldDescription[][] _staticFields;
 
-        public PackedCrawlerData Crawl(PackedMemorySnapshot input)
+        internal PackedCrawlerData Crawl(PackedMemorySnapshot input)
         {
             _typeInfoToTypeDescription = input.typeDescriptions.ToDictionary(td => td.typeInfoAddress, td => td);
             _virtualMachineInformation = input.virtualMachineInformation;

@@ -8,16 +8,16 @@ using UnityEngine;
 
 namespace MemoryProfilerWindow
 {
-    class ShortestPathToRootFinder
+    internal class ShortestPathToRootFinder
     {
         private readonly CrawledMemorySnapshot _snapshot;
 
-        public ShortestPathToRootFinder(CrawledMemorySnapshot snapshot)
+        internal ShortestPathToRootFinder(CrawledMemorySnapshot snapshot)
         {
             _snapshot = snapshot;
         }
 
-        public ThingInMemory[] FindFor(ThingInMemory thing)
+        internal ThingInMemory[] FindFor(ThingInMemory thing)
         {
             var seen = new HashSet<ThingInMemory>();
             var queue = new Queue<List<ThingInMemory>>();
@@ -44,7 +44,7 @@ namespace MemoryProfilerWindow
             return null;
         }
 
-        public bool IsRoot(ThingInMemory thing, out string reason)
+        internal bool IsRoot(ThingInMemory thing, out string reason)
         {
             reason = null;
             if (thing is StaticFields)

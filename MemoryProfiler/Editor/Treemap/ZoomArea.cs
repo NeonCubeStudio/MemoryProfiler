@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections;
 
 [System.Serializable]
-public class ZoomArea
+internal class ZoomArea
 {
     // Global state
     private static Vector2 m_MouseDownPosition = new Vector2(-1000000, -1000000); // in transformed space
@@ -14,8 +14,8 @@ public class ZoomArea
     private bool m_HRangeLocked;
     [SerializeField]
     private bool m_VRangeLocked;
-    public bool hRangeLocked { get { return m_HRangeLocked; } set { m_HRangeLocked = value; } }
-    public bool vRangeLocked { get { return m_VRangeLocked; } set { m_VRangeLocked = value; } }
+    internal bool hRangeLocked { get { return m_HRangeLocked; } set { m_HRangeLocked = value; } }
+    internal bool vRangeLocked { get { return m_VRangeLocked; } set { m_VRangeLocked = value; } }
 
 
     [SerializeField]
@@ -26,10 +26,10 @@ public class ZoomArea
     private float m_VBaseRangeMin = 0;
     [SerializeField]
     private float m_VBaseRangeMax = 1;
-    public float hBaseRangeMin { get { return m_HBaseRangeMin; } set { m_HBaseRangeMin = value; } }
-    public float hBaseRangeMax { get { return m_HBaseRangeMax; } set { m_HBaseRangeMax = value; } }
-    public float vBaseRangeMin { get { return m_VBaseRangeMin; } set { m_VBaseRangeMin = value; } }
-    public float vBaseRangeMax { get { return m_VBaseRangeMax; } set { m_VBaseRangeMax = value; } }
+    internal float hBaseRangeMin { get { return m_HBaseRangeMin; } set { m_HBaseRangeMin = value; } }
+    internal float hBaseRangeMax { get { return m_HBaseRangeMax; } set { m_HBaseRangeMax = value; } }
+    internal float vBaseRangeMin { get { return m_VBaseRangeMin; } set { m_VBaseRangeMin = value; } }
+    internal float vBaseRangeMax { get { return m_VBaseRangeMax; } set { m_VBaseRangeMax = value; } }
     [SerializeField]
     private bool m_HAllowExceedBaseRangeMin = true;
     [SerializeField]
@@ -38,26 +38,26 @@ public class ZoomArea
     private bool m_VAllowExceedBaseRangeMin = true;
     [SerializeField]
     private bool m_VAllowExceedBaseRangeMax = true;
-    public bool hAllowExceedBaseRangeMin { get { return m_HAllowExceedBaseRangeMin; } set { m_HAllowExceedBaseRangeMin = value; } }
-    public bool hAllowExceedBaseRangeMax { get { return m_HAllowExceedBaseRangeMax; } set { m_HAllowExceedBaseRangeMax = value; } }
-    public bool vAllowExceedBaseRangeMin { get { return m_VAllowExceedBaseRangeMin; } set { m_VAllowExceedBaseRangeMin = value; } }
-    public bool vAllowExceedBaseRangeMax { get { return m_VAllowExceedBaseRangeMax; } set { m_VAllowExceedBaseRangeMax = value; } }
-    public float hRangeMin
+    internal bool hAllowExceedBaseRangeMin { get { return m_HAllowExceedBaseRangeMin; } set { m_HAllowExceedBaseRangeMin = value; } }
+    internal bool hAllowExceedBaseRangeMax { get { return m_HAllowExceedBaseRangeMax; } set { m_HAllowExceedBaseRangeMax = value; } }
+    internal bool vAllowExceedBaseRangeMin { get { return m_VAllowExceedBaseRangeMin; } set { m_VAllowExceedBaseRangeMin = value; } }
+    internal bool vAllowExceedBaseRangeMax { get { return m_VAllowExceedBaseRangeMax; } set { m_VAllowExceedBaseRangeMax = value; } }
+    internal float hRangeMin
     {
         get { return (hAllowExceedBaseRangeMin ? Mathf.NegativeInfinity : hBaseRangeMin); }
         set { SetAllowExceed(ref m_HBaseRangeMin, ref m_HAllowExceedBaseRangeMin, value); }
     }
-    public float hRangeMax
+    internal float hRangeMax
     {
         get { return (hAllowExceedBaseRangeMax ? Mathf.Infinity : hBaseRangeMax); }
         set { SetAllowExceed(ref m_HBaseRangeMax, ref m_HAllowExceedBaseRangeMax, value); }
     }
-    public float vRangeMin
+    internal float vRangeMin
     {
         get { return (vAllowExceedBaseRangeMin ? Mathf.NegativeInfinity : vBaseRangeMin); }
         set { SetAllowExceed(ref m_VBaseRangeMin, ref m_VAllowExceedBaseRangeMin, value); }
     }
-    public float vRangeMax
+    internal float vRangeMax
     {
         get { return (vAllowExceedBaseRangeMax ? Mathf.Infinity : vBaseRangeMax); }
         set { SetAllowExceed(ref m_VBaseRangeMax, ref m_VAllowExceedBaseRangeMax, value); }
@@ -84,22 +84,22 @@ public class ZoomArea
     // Window resize settings
     [SerializeField]
     private bool m_ScaleWithWindow = false;
-    public bool scaleWithWindow { get { return m_ScaleWithWindow; } set { m_ScaleWithWindow = value; } }
+    internal bool scaleWithWindow { get { return m_ScaleWithWindow; } set { m_ScaleWithWindow = value; } }
 
     // Slider settings
     [SerializeField]
     private bool m_HSlider = true;
     [SerializeField]
     private bool m_VSlider = true;
-    public bool hSlider { get { return m_HSlider; } set { Rect r = rect; m_HSlider = value; rect = r; } }
-    public bool vSlider { get { return m_VSlider; } set { Rect r = rect; m_VSlider = value; rect = r; } }
+    internal bool hSlider { get { return m_HSlider; } set { Rect r = rect; m_HSlider = value; rect = r; } }
+    internal bool vSlider { get { return m_VSlider; } set { Rect r = rect; m_VSlider = value; rect = r; } }
 
     [SerializeField]
     private bool m_IgnoreScrollWheelUntilClicked = false;
-    public bool ignoreScrollWheelUntilClicked { get { return m_IgnoreScrollWheelUntilClicked; } set { m_IgnoreScrollWheelUntilClicked = value; } }
+    internal bool ignoreScrollWheelUntilClicked { get { return m_IgnoreScrollWheelUntilClicked; } set { m_IgnoreScrollWheelUntilClicked = value; } }
 
-    public bool m_UniformScale;
-    public bool uniformScale { get { return m_UniformScale; } set { m_UniformScale = value; } }
+    internal bool m_UniformScale;
+    internal bool uniformScale { get { return m_UniformScale; } set { m_UniformScale = value; } }
 
     // View and drawing settings
     [SerializeField]
@@ -125,25 +125,25 @@ public class ZoomArea
     bool m_MinimalGUI;
 
     [System.Serializable]
-    public class Styles
+    internal class Styles
     {
 #if UNITY_5_5_OR_NEWER
         public GUIStyle background = "AnimationKeyframeBackground";
 #else
-        public GUIStyle background = "AnimationCurveEditorBackground";
+        internal GUIStyle background = "AnimationCurveEditorBackground";
 #endif
-        public GUIStyle horizontalScrollbar;
-        public GUIStyle horizontalMinMaxScrollbarThumb;
-        public GUIStyle horizontalScrollbarLeftButton;
-        public GUIStyle horizontalScrollbarRightButton;
-        public GUIStyle verticalScrollbar;
-        public GUIStyle verticalMinMaxScrollbarThumb;
-        public GUIStyle verticalScrollbarUpButton;
-        public GUIStyle verticalScrollbarDownButton;
+        internal GUIStyle horizontalScrollbar;
+        internal GUIStyle horizontalMinMaxScrollbarThumb;
+        internal GUIStyle horizontalScrollbarLeftButton;
+        internal GUIStyle horizontalScrollbarRightButton;
+        internal GUIStyle verticalScrollbar;
+        internal GUIStyle verticalMinMaxScrollbarThumb;
+        internal GUIStyle verticalScrollbarUpButton;
+        internal GUIStyle verticalScrollbarDownButton;
 
-        public float sliderWidth;
-        public float visualSliderWidth;
-        public Styles(bool minimalGUI)
+        internal float sliderWidth;
+        internal float visualSliderWidth;
+        internal Styles(bool minimalGUI)
         {
             if (minimalGUI)
             {
@@ -157,7 +157,7 @@ public class ZoomArea
             }
         }
 
-        public void InitGUIStyles(bool minimalGUI)
+        internal void InitGUIStyles(bool minimalGUI)
         {
             if (minimalGUI)
             {
@@ -217,30 +217,30 @@ public class ZoomArea
             EnforceScaleAndRange();
         }
     }
-    public Rect drawRect { get { return m_DrawArea; } }
+    internal Rect drawRect { get { return m_DrawArea; } }
 
-    public void SetShownHRangeInsideMargins(float min, float max)
+    internal void SetShownHRangeInsideMargins(float min, float max)
     {
         m_Scale.x = (drawRect.width - leftmargin - rightmargin) / (max - min);
         m_Translation.x = -min * m_Scale.x + leftmargin;
         EnforceScaleAndRange();
     }
 
-    public void SetShownHRange(float min, float max)
+    internal void SetShownHRange(float min, float max)
     {
         m_Scale.x = drawRect.width / (max - min);
         m_Translation.x = -min * m_Scale.x;
         EnforceScaleAndRange();
     }
 
-    public void SetShownVRangeInsideMargins(float min, float max)
+    internal void SetShownVRangeInsideMargins(float min, float max)
     {
         m_Scale.y = -(drawRect.height - topmargin - bottommargin) / (max - min);
         m_Translation.y = drawRect.height - min * m_Scale.y - topmargin;
         EnforceScaleAndRange();
     }
 
-    public void SetShownVRange(float min, float max)
+    internal void SetShownVRange(float min, float max)
     {
         m_Scale.y = -drawRect.height / (max - min);
         m_Translation.y = drawRect.height - min * m_Scale.y;
@@ -248,7 +248,7 @@ public class ZoomArea
     }
 
     // ShownArea is in curve space
-    public Rect shownArea
+    internal Rect shownArea
     {
         set
         {
@@ -269,7 +269,7 @@ public class ZoomArea
         }
     }
 
-    public Rect shownAreaInsideMargins
+    internal Rect shownAreaInsideMargins
     {
         set
         {
@@ -307,7 +307,7 @@ public class ZoomArea
         }
     }
 
-    public virtual Bounds drawingBounds
+    internal virtual Bounds drawingBounds
     {
         get
         {
@@ -321,7 +321,7 @@ public class ZoomArea
 
     // Utility transform functions
 
-    public Matrix4x4 drawingToViewMatrix
+    internal Matrix4x4 drawingToViewMatrix
     {
         get
         {
@@ -329,32 +329,32 @@ public class ZoomArea
         }
     }
 
-    public Vector2 DrawingToViewTransformPoint(Vector2 lhs)
+    internal Vector2 DrawingToViewTransformPoint(Vector2 lhs)
     { return new Vector2(lhs.x * m_Scale.x + m_Translation.x, lhs.y * m_Scale.y + m_Translation.y); }
-    public Vector3 DrawingToViewTransformPoint(Vector3 lhs)
+    internal Vector3 DrawingToViewTransformPoint(Vector3 lhs)
     { return new Vector3(lhs.x * m_Scale.x + m_Translation.x, lhs.y * m_Scale.y + m_Translation.y, 0); }
 
-    public Vector2 ViewToDrawingTransformPoint(Vector2 lhs)
+    internal Vector2 ViewToDrawingTransformPoint(Vector2 lhs)
     { return new Vector2((lhs.x - m_Translation.x) / m_Scale.x, (lhs.y - m_Translation.y) / m_Scale.y); }
-    public Vector3 ViewToDrawingTransformPoint(Vector3 lhs)
+    internal Vector3 ViewToDrawingTransformPoint(Vector3 lhs)
     { return new Vector3((lhs.x - m_Translation.x) / m_Scale.x, (lhs.y - m_Translation.y) / m_Scale.y, 0); }
 
-    public Vector2 DrawingToViewTransformVector(Vector2 lhs)
+    internal Vector2 DrawingToViewTransformVector(Vector2 lhs)
     { return new Vector2(lhs.x * m_Scale.x, lhs.y * m_Scale.y); }
-    public Vector3 DrawingToViewTransformVector(Vector3 lhs)
+    internal Vector3 DrawingToViewTransformVector(Vector3 lhs)
     { return new Vector3(lhs.x * m_Scale.x, lhs.y * m_Scale.y, 0); }
 
-    public Vector2 ViewToDrawingTransformVector(Vector2 lhs)
+    internal Vector2 ViewToDrawingTransformVector(Vector2 lhs)
     { return new Vector2(lhs.x / m_Scale.x, lhs.y / m_Scale.y); }
-    public Vector3 ViewToDrawingTransformVector(Vector3 lhs)
+    internal Vector3 ViewToDrawingTransformVector(Vector3 lhs)
     { return new Vector3(lhs.x / m_Scale.x, lhs.y / m_Scale.y, 0); }
 
-    public Vector2 mousePositionInDrawing
+    internal Vector2 mousePositionInDrawing
     {
         get { return ViewToDrawingTransformPoint(Event.current.mousePosition); }
     }
 
-    public Vector2 NormalizeInViewSpace(Vector2 vec)
+    internal Vector2 NormalizeInViewSpace(Vector2 vec)
     {
         vec = Vector2.Scale(vec, m_Scale);
         vec /= vec.magnitude;
@@ -379,17 +379,17 @@ public class ZoomArea
             );
     }
 
-    public ZoomArea()
+    private ZoomArea()
     {
         m_MinimalGUI = false;
     }
 
-    public ZoomArea(bool minimalGUI)
+    internal ZoomArea(bool minimalGUI)
     {
         m_MinimalGUI = minimalGUI;
     }
 
-    public void BeginViewGUI()
+    internal void BeginViewGUI()
     {
         if (styles.horizontalScrollbar == null)
             styles.InitGUIStyles(m_MinimalGUI);
@@ -399,7 +399,7 @@ public class ZoomArea
         GUILayout.EndArea();
     }
 
-    public void HandleZoomAndPanEvents(Rect area)
+    internal void HandleZoomAndPanEvents(Rect area)
     {
         area.x = 0;
         area.y = 0;
@@ -506,7 +506,7 @@ public class ZoomArea
         EnforceScaleAndRange();
     }
 
-    public void EnforceScaleAndRange()
+    internal void EnforceScaleAndRange()
     {
         float hScaleMin = m_HScaleMin;
         float vScaleMin = m_VScaleMin;
@@ -579,17 +579,17 @@ public class ZoomArea
         m_LastShownAreaInsideMargins = newArea;
     }
 
-    public float PixelToTime(float pixelX, Rect rect)
+    internal float PixelToTime(float pixelX, Rect rect)
     {
         return ((pixelX - rect.x) * shownArea.width / rect.width + shownArea.x);
     }
 
-    public float TimeToPixel(float time, Rect rect)
+    internal float TimeToPixel(float time, Rect rect)
     {
         return (time - shownArea.x) / shownArea.width * rect.width + rect.x;
     }
 
-    public float PixelDeltaToTime(Rect rect)
+    internal float PixelDeltaToTime(Rect rect)
     {
         return shownArea.width / rect.width;
     }

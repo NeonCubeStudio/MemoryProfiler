@@ -9,14 +9,14 @@ using UnityEngine;
 
 namespace Treemap
 {
-    public class Group : IComparable<Group>, ITreemapRenderable
+    internal class Group : IComparable<Group>, ITreemapRenderable
     {
-        public string _name;
-        public Rect _position;
-        public List<Item> _items;
+        internal string _name;
+        internal Rect _position;
+        internal List<Item> _items;
         private float _totalMemorySize = -1;
 
-        public float totalMemorySize
+        internal float totalMemorySize
         {
             get
             {
@@ -33,7 +33,7 @@ namespace Treemap
             }
         }
 
-        public float[] memorySizes
+        internal float[] memorySizes
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Treemap
             }
         }
 
-        public Color color
+        internal Color color
         {
             get { return Utility.GetColorForName(_name); }
         }

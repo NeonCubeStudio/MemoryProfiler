@@ -3,9 +3,9 @@ using UnityEditor.MemoryProfiler;
 
 namespace MemoryProfilerWindow
 {
-    static class ArrayTools
+    internal static class ArrayTools
     {
-        public static int ReadArrayLength(MemorySection[] heap, UInt64 address, TypeDescription arrayType, VirtualMachineInformation virtualMachineInformation)
+        internal static int ReadArrayLength(MemorySection[] heap, UInt64 address, TypeDescription arrayType, VirtualMachineInformation virtualMachineInformation)
         {
             var bo = heap.Find(address, virtualMachineInformation);
 
@@ -33,7 +33,7 @@ namespace MemoryProfilerWindow
             return length;
         }
 
-        public static int ReadArrayObjectSizeInBytes(MemorySection[] heap, UInt64 address, TypeDescription arrayType, TypeDescription[] typeDescriptions, VirtualMachineInformation virtualMachineInformation)
+        internal static int ReadArrayObjectSizeInBytes(MemorySection[] heap, UInt64 address, TypeDescription arrayType, TypeDescription[] typeDescriptions, VirtualMachineInformation virtualMachineInformation)
         {
             var arrayLength = ArrayTools.ReadArrayLength(heap, address, arrayType, virtualMachineInformation);
             var elementType = typeDescriptions[arrayType.baseOrElementTypeIndex];

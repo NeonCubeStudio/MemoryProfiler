@@ -9,61 +9,61 @@ namespace MemoryProfilerWindow
     //this is the highest level dataformat. it can be unpacked from the PackedCrawledMemorySnapshot, which contains all the interesting information we want. The Packed format
     //however is designed to be serializable and relatively storage compact.  This dataformat is designed to give a nice c# api experience. so while the packed version uses typeIndex,
     //this version has TypeReferences,  and also uses references to ThingInObject, instead of the more obscure object indexing pattern that the packed format uses.
-    public class CrawledMemorySnapshot
+    internal class CrawledMemorySnapshot
     {
-        public NativeUnityEngineObject[] nativeObjects;
-        public GCHandle[] gcHandles;
-        public ManagedObject[] managedObjects;
-        public StaticFields[] staticFields;
+        internal NativeUnityEngineObject[] nativeObjects;
+        internal GCHandle[] gcHandles;
+        internal ManagedObject[] managedObjects;
+        internal StaticFields[] staticFields;
 
         //contains concatenation of nativeObjects, gchandles, managedobjects and staticfields
-        public ThingInMemory[] allObjects { get; private set; }
-        public long totalSize { get; private set; }
+        internal ThingInMemory[] allObjects { get; private set; }
+        internal long totalSize { get; private set; }
 
-        public MemorySection[] managedHeap;
-        public TypeDescription[] typeDescriptions;
-        public PackedNativeType[] nativeTypes;
-        public VirtualMachineInformation virtualMachineInformation;
+        internal MemorySection[] managedHeap;
+        internal TypeDescription[] typeDescriptions;
+        internal PackedNativeType[] nativeTypes;
+        internal VirtualMachineInformation virtualMachineInformation;
 
-        public void FinishSnapshot()
+        internal void FinishSnapshot()
         {
             allObjects = new ThingInMemory[0].Concat(gcHandles).Concat(nativeObjects).Concat(staticFields).Concat(managedObjects).ToArray();
             totalSize = allObjects != null ? allObjects.Sum(o => o.size) : 0;
         }
     }
 
-    public class ThingInMemory
+    internal class ThingInMemory
     {
-        public long size;
-        public string caption;
-        public ThingInMemory[] references;
-        public ThingInMemory[] referencedBy;
-        public bool ignored;
+        internal long size;
+        internal string caption;
+        internal ThingInMemory[] references;
+        internal ThingInMemory[] referencedBy;
+        internal bool ignored;
     }
 
-    public class ManagedObject : ThingInMemory
+    internal class ManagedObject : ThingInMemory
     {
-        public UInt64 address;
-        public TypeDescription typeDescription;
+        internal UInt64 address;
+        internal TypeDescription typeDescription;
     }
 
-    public class NativeUnityEngineObject : ThingInMemory
+    internal class NativeUnityEngineObject : ThingInMemory
     {
-        public int instanceID;
-        public int classID;
-        public string className;
-        public string name;
-        public bool isPersistent;
-        public bool isDontDestroyOnLoad;
-        public bool isManager;
-        public HideFlags hideFlags;
+        internal int instanceID;
+        internal int classID;
+        internal string className;
+        internal string name;
+        internal bool isPersistent;
+        internal bool isDontDestroyOnLoad;
+        internal bool isManager;
+        internal HideFlags hideFlags;
     }
 
-    public class GCHandle : ThingInMemory
+    internal class GCHandle : ThingInMemory
     {
     }
 
-    public class StaticFields : ThingInMemory
+    internal class StaticFields : ThingInMemory
     {
         public TypeDescription typeDescription;
         public byte[] storage;

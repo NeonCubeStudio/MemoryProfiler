@@ -3,10 +3,10 @@ using System;
 namespace MemoryProfilerWindow
 {
     [Serializable]
-    public class PackedManagedObject
+    internal class PackedManagedObject
     {
-        public UInt64 address;
-        public int typeIndex;
-        public int size;
+        internal UInt64 address;
+        internal int typeIndex;
+        internal int size;
     }
 }

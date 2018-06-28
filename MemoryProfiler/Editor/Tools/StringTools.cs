@@ -3,9 +3,9 @@ using UnityEditor.MemoryProfiler;
 
 namespace MemoryProfilerWindow
 {
-    static class StringTools
+    internal static class StringTools
     {
-        public static string ReadString(BytesAndOffset bo, VirtualMachineInformation virtualMachineInformation)
+        internal static string ReadString(BytesAndOffset bo, VirtualMachineInformation virtualMachineInformation)
         {
             var lengthPointer = bo.Add(virtualMachineInformation.objectHeaderSize);
             var length = lengthPointer.ReadInt32();
@@ -14,7 +14,7 @@ namespace MemoryProfilerWindow
             return System.Text.Encoding.Unicode.GetString(firstChar.bytes, firstChar.offset, length * 2);
         }
 
-        public static int ReadStringObjectSizeInBytes(BytesAndOffset bo, VirtualMachineInformation virtualMachineInformation)
+        internal static int ReadStringObjectSizeInBytes(BytesAndOffset bo, VirtualMachineInformation virtualMachineInformation)
         {
             var lengthPointer = bo.Add(virtualMachineInformation.objectHeaderSize);
             var length = lengthPointer.ReadInt32();

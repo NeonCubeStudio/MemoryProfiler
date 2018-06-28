@@ -5,15 +5,15 @@ using System.Linq;
 
 namespace MemoryProfilerWindow
 {
-	static class TypeTools
+    internal static class TypeTools
 	{
-		public enum FieldFindOptions
+        internal enum FieldFindOptions
 		{
 			OnlyInstance,
 			OnlyStatic
 		}
 
-		static public IEnumerable<FieldDescription> AllFieldsOf (TypeDescription typeDescription, TypeDescription[] typeDescriptions, FieldFindOptions findOptions)
+        internal static IEnumerable<FieldDescription> AllFieldsOf (TypeDescription typeDescription, TypeDescription[] typeDescriptions, FieldFindOptions findOptions)
 		{
 			if (typeDescription.isArray)
 				yield break;
@@ -46,7 +46,7 @@ namespace MemoryProfilerWindow
 			}
 		}
 
-		static bool FieldMatchesOptions(FieldDescription field, FieldFindOptions options)
+        internal static bool FieldMatchesOptions(FieldDescription field, FieldFindOptions options)
 		{
 			if (field.isStatic && options == FieldFindOptions.OnlyStatic)
 				return true;

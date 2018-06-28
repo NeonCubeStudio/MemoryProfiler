@@ -17,18 +17,18 @@ namespace MemoryProfilerWindow
     public class MemoryProfilerWindow : EditorWindow
     {
         [NonSerialized]
-        UnityEditor.MemoryProfiler.PackedMemorySnapshot _snapshot;
+        private UnityEditor.MemoryProfiler.PackedMemorySnapshot _snapshot;
 
         [SerializeField]
-        PackedCrawlerData _packedCrawled;
+        private PackedCrawlerData _packedCrawled;
 
         [NonSerialized]
-        CrawledMemorySnapshot _unpackedCrawl;
+        private CrawledMemorySnapshot _unpackedCrawl;
 
         [NonSerialized]
-        CrawledMemorySnapshot _previousUnpackedCrawl;
+        private CrawledMemorySnapshot _previousUnpackedCrawl;
 
-        Vector2 _scrollPosition;
+        private Vector2 _scrollPosition;
 
         [NonSerialized]
         private bool _registered = false;
@@ -40,12 +40,12 @@ namespace MemoryProfilerWindow
         private FilterItems _filterItems;
 
         [MenuItem("Window/MemoryProfiler")]
-        static void Create()
+        private static void Create()
         {
             EditorWindow.GetWindow<MemoryProfilerWindow>();
         }
 
-        public void OnDestroy()
+        internal void OnDestroy()
         {
             UnityEditor.MemoryProfiler.MemorySnapshot.OnSnapshotReceived -= IncomingSnapshot;
 
@@ -53,7 +53,7 @@ namespace MemoryProfilerWindow
                 _treeMapView.CleanupMeshes ();
         }
 
-        public void Initialize()
+        internal void Initialize()
         {
             if (_treeMapView == null)
                 _treeMapView = new TreeMapView ();
@@ -72,7 +72,7 @@ namespace MemoryProfilerWindow
 
         }
 
-        void OnGUI()
+        private void OnGUI()
         {
             Initialize();
 
@@ -116,18 +116,18 @@ namespace MemoryProfilerWindow
                 _inspector.Draw();
         }
 
-        public void SelectThing(ThingInMemory thing)
+        internal void SelectThing(ThingInMemory thing)
         {
             _inspector.SelectThing(thing);
             _treeMapView.SelectThing(thing);
         }
 
-        public void SelectGroup(Group group)
+        internal void SelectGroup(Group group)
         {
             _treeMapView.SelectGroup(group);
         }
 
-        void Unpack()
+        private void Unpack()
         {
             _previousUnpackedCrawl = _unpackedCrawl;
             _unpackedCrawl = CrawlDataUnpacker.Unpack(_packedCrawled);
@@ -142,7 +142,7 @@ namespace MemoryProfilerWindow
                 _viewCanvas = new ViewCanvas(this);
         }
 
-        void IncomingSnapshot(PackedMemorySnapshot snapshot)
+        private void IncomingSnapshot(PackedMemorySnapshot snapshot)
         {
             _snapshot = snapshot;
 

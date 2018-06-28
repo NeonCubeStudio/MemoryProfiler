@@ -3,18 +3,18 @@ using UnityEditor;
 
 namespace MemoryProfilerWindow
 {
-    public class ViewCanvas
+    internal class ViewCanvas
     {
         private MemoryProfilerWindow _hostWindow;
         private int _selectedTab = 0;
         internal Rect _canvas;
 
-        public ViewCanvas(MemoryProfilerWindow hostWindow)
+        internal ViewCanvas(MemoryProfilerWindow hostWindow)
         {
             _hostWindow = hostWindow;
         }
 
-        public void Draw()
+        internal void Draw()
         {
             if (_hostWindow == null)
                 return;

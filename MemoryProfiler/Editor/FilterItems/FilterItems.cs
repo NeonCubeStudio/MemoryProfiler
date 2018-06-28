@@ -6,22 +6,22 @@ using UnityEngine;
 
 namespace MemoryProfilerWindow
 {
-	public class FilterItems
+	internal class FilterItems
 	{
 		[Flags]
-		enum Filters
+		private enum Filters
 		{
 			Everything = 0,
 			IgnoreUnused = 1 << 0,
             NewOnly = 1 << 1,
         }
 
-		MemoryProfilerWindow _hostWindow;
-		CrawledMemorySnapshot _unpackedCrawl;
-        CrawledMemorySnapshot _previousUnpackedCrawl;
-        Filters _currentFilter;
+		private MemoryProfilerWindow _hostWindow;
+		private CrawledMemorySnapshot _unpackedCrawl;
+        private CrawledMemorySnapshot _previousUnpackedCrawl;
+        private Filters _currentFilter;
 
-        public FilterItems(MemoryProfilerWindow hostWindow, CrawledMemorySnapshot unpackedCrawl, CrawledMemorySnapshot previousUnpackedCrawl)
+        internal FilterItems(MemoryProfilerWindow hostWindow, CrawledMemorySnapshot unpackedCrawl, CrawledMemorySnapshot previousUnpackedCrawl)
         {
 			this._unpackedCrawl = unpackedCrawl;
             this._previousUnpackedCrawl = previousUnpackedCrawl;
@@ -29,7 +29,7 @@ namespace MemoryProfilerWindow
 			this._currentFilter = Filters.Everything;
         }
 
-		public void Draw()
+		internal void Draw()
 		{
 			bool refreshRequired = false;
 
@@ -65,7 +65,7 @@ namespace MemoryProfilerWindow
 				ApplyFilters();
 		}
 
-		void ApplyFilters()
+		private void ApplyFilters()
 		{
 			foreach (var thing in _unpackedCrawl.allObjects)
 				thing.ignored = false;
@@ -79,7 +79,7 @@ namespace MemoryProfilerWindow
             _hostWindow._spreadsheetView.Draw();
 		}
 
-		void FilterIgnoreUnused()
+		private void FilterIgnoreUnused()
 		{
 			HashSet<ThingInMemory> matches = new HashSet<ThingInMemory>();
 			Queue<ThingInMemory> references = new Queue<ThingInMemory>();
@@ -115,7 +115,7 @@ namespace MemoryProfilerWindow
 			}		
 		}
 
-        void FilterNewOnly()
+        private void FilterNewOnly()
 		{
             if (_previousUnpackedCrawl == null)
                 return;

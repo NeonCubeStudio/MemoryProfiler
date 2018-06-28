@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Editor.Treemap
 {
-    interface ITreemapRenderable
+    internal interface ITreemapRenderable
     {
         Color GetColor();
         Rect GetPosition();

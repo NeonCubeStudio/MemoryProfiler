@@ -11,12 +11,12 @@ using Profiler = UnityEngine.Profiler;
 
 namespace MemoryProfilerWindow
 {
-    public static class PackedMemorySnapshotUtility
+    internal static class PackedMemorySnapshotUtility
     {
 
         private static string previousDirectory = null;
 
-        public static void SaveToFile(PackedMemorySnapshot snapshot)
+        internal static void SaveToFile(PackedMemorySnapshot snapshot)
         {
             var filePath = EditorUtility.SaveFilePanel("Save Snapshot", previousDirectory, "MemorySnapshot", "memsnap2");
             if (string.IsNullOrEmpty(filePath))
@@ -26,7 +26,7 @@ namespace MemoryProfilerWindow
             SaveToFile(filePath, snapshot);
         }
 
-        static void SaveToFile(string filePath, PackedMemorySnapshot snapshot)
+        private static void SaveToFile(string filePath, PackedMemorySnapshot snapshot)
         {
             // Saving snapshots using JsonUtility, instead of BinaryFormatter, is significantly faster.
             // I cancelled saving a memory snapshot that is saving using BinaryFormatter after 24 hours.
@@ -45,7 +45,7 @@ namespace MemoryProfilerWindow
             Debug.LogFormat("Saving took {0}ms", stopwatch.ElapsedMilliseconds);
         }
 
-        public static PackedMemorySnapshot LoadFromFile()
+        internal static PackedMemorySnapshot LoadFromFile()
         {
             var filePath = EditorUtility.OpenFilePanelWithFilters("Load Snapshot", previousDirectory, new[] { "Snapshots", "memsnap2,memsnap" });
             if (string.IsNullOrEmpty(filePath))
@@ -54,7 +54,7 @@ namespace MemoryProfilerWindow
             return LoadFromFile(filePath);
         }
 
-        static PackedMemorySnapshot LoadFromFile(string filePath)
+        private static PackedMemorySnapshot LoadFromFile(string filePath)
         {
             Debug.LogFormat("Loading...");
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();

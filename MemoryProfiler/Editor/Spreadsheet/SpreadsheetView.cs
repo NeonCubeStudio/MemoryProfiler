@@ -4,15 +4,15 @@ using UnityEditor;
 
 namespace MemoryProfilerWindow
 {
-    public class SpreadsheetView
+    internal class SpreadsheetView
     {
-        CrawledMemorySnapshot m_unpackedCrawl;
-        MemoryProfilerWindow m_hostWindow;
+        private CrawledMemorySnapshot m_unpackedCrawl;
+        private MemoryProfilerWindow m_hostWindow;
 
         private Table m_table;
 
 
-        enum ThingType
+        private enum ThingType
         {
             NativeUnityEngineObject = 0,
             ManagedObject,
@@ -21,7 +21,7 @@ namespace MemoryProfilerWindow
             Count
         }
 
-        string ThingTypeToString(ThingType t)
+        private string ThingTypeToString(ThingType t)
         {
             switch (t)
             {
@@ -33,7 +33,7 @@ namespace MemoryProfilerWindow
             }
         }
 
-        enum Column
+        private enum Column
         {
             Name = 0,
             Type,
@@ -43,7 +43,7 @@ namespace MemoryProfilerWindow
             Count
         }
 
-        string ColumnName(Column col)
+        private string ColumnName(Column col)
         {
             switch (col)
             {
@@ -56,7 +56,7 @@ namespace MemoryProfilerWindow
             }
         }
 
-        public SpreadsheetView()
+        internal SpreadsheetView()
         {
             m_table = new Table();
             m_table.numColumnsCallback = NumColumns;
@@ -68,14 +68,14 @@ namespace MemoryProfilerWindow
             m_table.widthForColumnCallback = WidthForColumn;
         }
 
-        public void Setup(MemoryProfilerWindow hostWindow, CrawledMemorySnapshot unpackedCrawl)
+        internal void Setup(MemoryProfilerWindow hostWindow, CrawledMemorySnapshot unpackedCrawl)
         {
             this.m_unpackedCrawl = unpackedCrawl;
             this.m_hostWindow = hostWindow;
             m_table.InvalidateData();
         }
 
-        public void Draw()
+        internal void Draw()
         {
             if (m_hostWindow == null)
                 return;
@@ -88,7 +88,7 @@ namespace MemoryProfilerWindow
             GUILayout.EndArea();
         }
 
-        ThingType indexToThingType(int id)
+        private ThingType indexToThingType(int id)
         {
             int lenGC = m_unpackedCrawl.gcHandles.Length;
             int lenNative = lenGC + m_unpackedCrawl.nativeObjects.Length;
@@ -104,7 +104,7 @@ namespace MemoryProfilerWindow
                 return ThingType.ManagedObject;
         }
 
-        GUIContent DataForGrid(int id, int col)
+        private GUIContent DataForGrid(int id, int col)
         {
             string str = "undefined";
             ThingInMemory thing = m_unpackedCrawl.allObjects[id];
@@ -138,7 +138,7 @@ namespace MemoryProfilerWindow
             return new GUIContent(str);
         }
 
-        int CompareData(int id1, int id2, int col)
+        private int CompareData(int id1, int id2, int col)
         {
             ThingInMemory thing1 = m_unpackedCrawl.allObjects[id1];
             var nativeObject1 = thing1 as NativeUnityEngineObject;
@@ -184,27 +184,27 @@ namespace MemoryProfilerWindow
             return 0;
         }
 
-        void TableIDSelected(int id)
+        private void TableIDSelected(int id)
         {
             m_hostWindow.SelectThing(m_unpackedCrawl.allObjects[id]);
         }
 
-        int NumColumns()
+        private int NumColumns()
         {
             return (int)Column.Count;
         }
 
-        int NumRows()
+        private int NumRows()
         {
             return m_unpackedCrawl.allObjects.Length;
         }
 
-        GUIContent LabelForColumn(int c)
+        private GUIContent LabelForColumn(int c)
         {
             return new GUIContent(ColumnName((Column)c));
         }
 
-        float WidthForColumn(int c)
+        private float WidthForColumn(int c)
         {
             switch ((Column)c)
             {

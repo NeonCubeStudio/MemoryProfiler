@@ -6,12 +6,12 @@ namespace MemoryProfilerWindow
 {
     internal struct BytesAndOffset
     {
-        public byte[] bytes;
-        public int offset;
-        public int pointerSize;
-        public bool IsValid { get { return bytes != null; }}
+        internal byte[] bytes;
+        internal int offset;
+        internal int pointerSize;
+        internal bool IsValid { get { return bytes != null; }}
 
-        public UInt64 ReadPointer()
+        internal UInt64 ReadPointer()
         {
             if (pointerSize == 4)
                 return BitConverter.ToUInt32(bytes, offset);
@@ -20,22 +20,22 @@ namespace MemoryProfilerWindow
             throw new ArgumentException("Unexpected pointersize: " + pointerSize);
         }
 
-        public Int32 ReadInt32()
+        internal Int32 ReadInt32()
         {
             return BitConverter.ToInt32(bytes, offset);
         }
 
-        public Int64 ReadInt64()
+        internal Int64 ReadInt64()
         {
             return BitConverter.ToInt64(bytes, offset);
         }
 
-        public BytesAndOffset Add(int add)
+        internal BytesAndOffset Add(int add)
         {
             return new BytesAndOffset() {bytes = bytes, offset = offset + add, pointerSize = pointerSize};
         }
 
-        public void WritePointer(UInt64 value)
+        internal void WritePointer(UInt64 value)
         {
             for (int i = 0; i < pointerSize; i++)
             {
@@ -44,7 +44,7 @@ namespace MemoryProfilerWindow
             }
         }
 
-        public BytesAndOffset NextPointer()
+        internal BytesAndOffset NextPointer()
         {
             return Add(pointerSize);
         }

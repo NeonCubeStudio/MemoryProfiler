@@ -8,33 +8,33 @@ using System.Collections.Generic;
 
 namespace MemoryProfilerWindow
 {
-    public class Inspector
+    internal class Inspector
     {
-        Stack<ThingInMemory> _backSelected = new Stack<ThingInMemory>();
-        Stack<ThingInMemory> _nextSelected = new Stack<ThingInMemory>();
-        ThingInMemory _selectedThing;
+        private Stack<ThingInMemory> _backSelected = new Stack<ThingInMemory>();
+        private Stack<ThingInMemory> _nextSelected = new Stack<ThingInMemory>();
+        private ThingInMemory _selectedThing;
         private ThingInMemory[] _shortestPath;
         internal ShortestPathToRootFinder _shortestPathToRootFinder;
         private static int s_InspectorWidth = 400;
-        Vector2 _scrollPosition;
-        MemoryProfilerWindow _hostWindow;
-        CrawledMemorySnapshot _unpackedCrawl;
-        PrimitiveValueReader _primitiveValueReader;
-        Dictionary<ulong, ThingInMemory> objectCache = new Dictionary<ulong, ThingInMemory>();
+        private Vector2 _scrollPosition;
+        private MemoryProfilerWindow _hostWindow;
+        private CrawledMemorySnapshot _unpackedCrawl;
+        private PrimitiveValueReader _primitiveValueReader;
+        private Dictionary<ulong, ThingInMemory> objectCache = new Dictionary<ulong, ThingInMemory>();
         private Texture2D _textureObject;
         private int _prevInstance;
         private float _textureSize = 128.0f;
 
 
-        static class Styles
+        private static class Styles
         {
             public static GUIStyle entryEven = "OL EntryBackEven";
             public static GUIStyle entryOdd = "OL EntryBackOdd";
         }
 
-        GUILayoutOption labelWidth = GUILayout.Width(150);
+        private GUILayoutOption labelWidth = GUILayout.Width(150);
 
-        public Inspector(MemoryProfilerWindow hostWindow, CrawledMemorySnapshot unpackedCrawl, PackedMemorySnapshot snapshot)
+        internal Inspector(MemoryProfilerWindow hostWindow, CrawledMemorySnapshot unpackedCrawl, PackedMemorySnapshot snapshot)
         {
             _unpackedCrawl = unpackedCrawl;
             _hostWindow = hostWindow;
@@ -42,12 +42,12 @@ namespace MemoryProfilerWindow
             _primitiveValueReader = new PrimitiveValueReader(_unpackedCrawl.virtualMachineInformation, _unpackedCrawl.managedHeap);
         }
 
-        public float width
+        internal float width
         {
             get { return s_InspectorWidth; }
         }
 
-        public void SelectThing(ThingInMemory thing)
+        internal void SelectThing(ThingInMemory thing)
         {
             _selectedThing = thing;
 
@@ -57,7 +57,7 @@ namespace MemoryProfilerWindow
             _shortestPath = _shortestPathToRootFinder.FindFor(thing);
         }
 
-        public void Draw()
+        internal void Draw()
         {
             GUILayout.BeginArea(new Rect(_hostWindow.position.width - s_InspectorWidth, _hostWindow.topMargin, s_InspectorWidth, _hostWindow.position.height - _hostWindow.topMargin));
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
@@ -72,7 +72,7 @@ namespace MemoryProfilerWindow
                     _nextSelected.Push(_backSelected.Peek());
 
                 _hostWindow.SelectThing(_backSelected.Peek());
-			}
+            }
 			GUI.enabled = true;
 
             GUI.enabled = _nextSelected.Count > 1;

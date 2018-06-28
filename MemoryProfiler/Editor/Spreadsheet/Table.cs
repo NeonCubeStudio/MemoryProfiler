@@ -5,41 +5,41 @@ using System;
 
 namespace MemoryProfilerWindow
 {
-	public delegate int NumColumnsCallback();
-	public delegate int NumRowsCallback();
-	public delegate GUIContent LabelForColumnCallback(int col);
-	public delegate float WidthForColumnCallback(int col);
-	public delegate GUIContent DataForGridCallback(int id, int col);
-	public delegate int CompareDataCallback(int id1, int id2, int col);
-	public delegate void IDSelectedCallback(int id);
+	internal delegate int NumColumnsCallback();
+    internal delegate int NumRowsCallback();
+    internal delegate GUIContent LabelForColumnCallback(int col);
+    internal delegate float WidthForColumnCallback(int col);
+    internal delegate GUIContent DataForGridCallback(int id, int col);
+    internal delegate int CompareDataCallback(int id1, int id2, int col);
+    internal delegate void IDSelectedCallback(int id);
 
-    public class Table
+    internal class Table
     {
 		// Profiling GUI constants
-		const float kRowHeight = 16;
-		const float kFoldoutSize = 14;
-		const float kIndent = 16;
-		const float kSmallMargin = 4;
-		const float kBaseIndent = 4;
-		const float kInstrumentationButtonWidth = 30;
-		const float kInstrumentationButtonOffset = 5;
-		const int kFirst = -999999;
-		const int kLast = 999999;
-		const float kScrollbarWidth = 16;
+		private const float kRowHeight = 16;
+        private const float kFoldoutSize = 14;
+        private const float kIndent = 16;
+        private const float kSmallMargin = 4;
+        private const float kBaseIndent = 4;
+        private const float kInstrumentationButtonWidth = 30;
+        private const float kInstrumentationButtonOffset = 5;
+        private const int kFirst = -999999;
+        private const int kLast = 999999;
+        private const float kScrollbarWidth = 16;
 
 		protected class Styles
 		{
-			public GUIStyle background = "OL Box";
-			public GUIStyle header = "OL title";
-			public GUIStyle rightHeader = "OL title TextRight";
-			public GUIStyle entryEven = "OL EntryBackEven";
-			public GUIStyle entryOdd = "OL EntryBackOdd";
-			public GUIStyle numberLabel = "OL Label";
-			public GUIStyle foldout = "IN foldout";
-			public GUIStyle miniPullDown = "MiniPullDown";
-			public GUIContent disabledSearchText = new GUIContent("Showing search results are disabled while recording with deep profiling.\nStop recording to view search results.");
-			public GUIContent notShowingAllResults = new GUIContent("...", "Narrow your search. Not all search results can be shown.");
-			public GUIContent instrumentationIcon = EditorGUIUtility.IconContent("Profiler.Record", "Record|Record profiling information");
+            internal GUIStyle background = "OL Box";
+            internal GUIStyle header = "OL title";
+            internal GUIStyle rightHeader = "OL title TextRight";
+            internal GUIStyle entryEven = "OL EntryBackEven";
+            internal GUIStyle entryOdd = "OL EntryBackOdd";
+            internal GUIStyle numberLabel = "OL Label";
+            internal GUIStyle foldout = "IN foldout";
+            internal GUIStyle miniPullDown = "MiniPullDown";
+            internal GUIContent disabledSearchText = new GUIContent("Showing search results are disabled while recording with deep profiling.\nStop recording to view search results.");
+            internal GUIContent notShowingAllResults = new GUIContent("...", "Narrow your search. Not all search results can be shown.");
+            internal GUIContent instrumentationIcon = EditorGUIUtility.IconContent("Profiler.Record", "Record|Record profiling information");
 		}
 
 		protected static Styles ms_Styles;
@@ -48,27 +48,27 @@ namespace MemoryProfilerWindow
 			get { return ms_Styles ?? (ms_Styles = new Styles()); }
 		}
 
-		public NumColumnsCallback numColumnsCallback = () => 0;
-		public NumRowsCallback numRowsCallback = () => 0;
-		public LabelForColumnCallback labelForColumnCallback = c => GUIContent.none;
-		public DataForGridCallback dataForGridCallback = (r, c) => null;
-		public CompareDataCallback compareDataCallback = (id1, id2, c) => 0;
-		public IDSelectedCallback idSelectedCallback = r => { };
-		public WidthForColumnCallback widthForColumnCallback = null;
+        internal NumColumnsCallback numColumnsCallback = () => 0;
+        internal NumRowsCallback numRowsCallback = () => 0;
+        internal LabelForColumnCallback labelForColumnCallback = c => GUIContent.none;
+        internal DataForGridCallback dataForGridCallback = (r, c) => null;
+        internal CompareDataCallback compareDataCallback = (id1, id2, c) => 0;
+        internal IDSelectedCallback idSelectedCallback = r => { };
+        internal WidthForColumnCallback widthForColumnCallback = null;
 
-		int m_sortIndex = 0;
-		Rect m_tableRect;
-		float m_scrollViewHeight;
-		Vector2 m_scrollPosition = Vector2.zero;
-		float[] m_columnWidths = null;
-		GUIContent[] m_columnLabels = null;
-		GUIContent[,] m_grid = null;
-		int[] m_sortedIDs = null;
-		int m_numColumns;
-		int m_numRows;
-		int m_selectedID = -1;
+        private int m_sortIndex = 0;
+        private Rect m_tableRect;
+        private float m_scrollViewHeight;
+        private Vector2 m_scrollPosition = Vector2.zero;
+        private float[] m_columnWidths = null;
+        private GUIContent[] m_columnLabels = null;
+        private GUIContent[,] m_grid = null;
+        private int[] m_sortedIDs = null;
+        private int m_numColumns;
+        private int m_numRows;
+        private int m_selectedID = -1;
 
-		public void InvalidateData()
+        internal void InvalidateData()
 		{
 			m_columnWidths = null;
 			m_columnLabels = null;
@@ -78,7 +78,7 @@ namespace MemoryProfilerWindow
 			m_numRows = 0;
 		}
 
-		void SortIDs()
+        private void SortIDs()
 		{
 			if (m_sortedIDs == null)
 			{
@@ -93,7 +93,7 @@ namespace MemoryProfilerWindow
 			Array.Sort<int>(m_sortedIDs, (id1, id2) => compareDataCallback(id1, id2, m_sortIndex));
 		}
 
-		void ClickOutsideToDeselect()
+        private void ClickOutsideToDeselect()
 		{
 			Event evt = Event.current;
 			if (evt.type == EventType.MouseDown &&
@@ -105,7 +105,7 @@ namespace MemoryProfilerWindow
 			}
 		}
 
-		void DrawColumnsHeader()
+        private void DrawColumnsHeader()
 		{
 			GUILayout.BeginHorizontal();
 
@@ -128,7 +128,7 @@ namespace MemoryProfilerWindow
 			GUILayout.EndHorizontal();
 		}
 
-		float TextDimensionsForColumnHeader(int col)
+        private float TextDimensionsForColumnHeader(int col)
 		{
 			if (widthForColumnCallback != null)
 				return widthForColumnCallback(col);
@@ -136,7 +136,7 @@ namespace MemoryProfilerWindow
 				return GUI.skin.label.CalcSize(labelForColumnCallback(col)).x + 20f;
 		}
 
-		void DrawTitle(GUIContent content, int index, bool setup)
+        private void DrawTitle(GUIContent content, int index, bool setup)
 		{
 			bool isSelected = (m_sortIndex == index);
 			float width = 0f;
@@ -166,17 +166,17 @@ namespace MemoryProfilerWindow
 			}
 		}
 
-		Rect GetRowRect(int rowIndex)
+        private Rect GetRowRect(int rowIndex)
 		{
 			return new Rect(1, kRowHeight* rowIndex, m_tableRect.width, kRowHeight);
 		}
 
-		GUIStyle GetRowBackgroundStyle(int rowIndex)
+        private GUIStyle GetRowBackgroundStyle(int rowIndex)
 		{
 			return (rowIndex % 2 == 0 ? styles.entryEven : styles.entryOdd);
 		}
 
-		GUIContent dataForGrid(int id, int col)
+        private GUIContent dataForGrid(int id, int col)
 		{
 			if (m_grid == null)
 				m_grid = new GUIContent[m_numRows, m_numColumns];
@@ -190,8 +190,8 @@ namespace MemoryProfilerWindow
 				return content;
 			}
 		}
-		
-		void DrawRow(int row, bool selected)
+
+        private void DrawRow(int row, bool selected)
 		{
 			Event evt = Event.current;
 
@@ -234,7 +234,7 @@ namespace MemoryProfilerWindow
 			}
 		}
 
-		bool isRowVisible(int row)
+        private bool isRowVisible(int row)
 		{
 			if (Event.current.type != EventType.Layout && m_scrollViewHeight == 0f)
 				return true;
@@ -242,7 +242,7 @@ namespace MemoryProfilerWindow
 			return m_scrollPosition.y - kRowHeight <= yPos && yPos <= m_scrollPosition.y + m_scrollViewHeight;
 		}
 
-		void DrawRows()
+        private void DrawRows()
 		{
 			m_tableRect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.ExpandWidth(true), GUILayout.MinHeight(kRowHeight* m_numRows));
 			for (int r=0; r<m_numRows; r++)
@@ -253,7 +253,7 @@ namespace MemoryProfilerWindow
 			}
 		}
 
-		public void DoGUI()
+        internal void DoGUI()
         {
 			m_numColumns = numColumnsCallback();
 			m_numRows = numRowsCallback();

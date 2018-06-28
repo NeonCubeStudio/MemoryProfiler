@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Treemap
 {
-    public class Utility
+    internal class Utility
     {
-        public static Rect[] GetTreemapRects(float[] values, Rect targetRect)
+        internal static Rect[] GetTreemapRects(float[] values, Rect targetRect)
         {
 			if (values.Length == 0)
 				throw new ArgumentException ("You need to at least pass in one valid value", "values");
@@ -142,7 +142,7 @@ namespace Treemap
             return rects.Sum(x => GetArea(x));
         }
 
-        public static Color GetColorForName(string name)
+        internal static Color GetColorForName(string name)
         {
             int r = 0, g = 0, b = 0;
 
@@ -169,7 +169,7 @@ namespace Treemap
             return new Color32((byte)(r + 96), (byte)(g + 96), (byte)(b + 96), 255);
         }
 
-        public static bool IsInside(Rect lhs, Rect rhs)
+        internal static bool IsInside(Rect lhs, Rect rhs)
         {
             return lhs.xMax > rhs.xMin && lhs.xMin < rhs.xMax && lhs.yMax > rhs.yMin && lhs.yMin < rhs.yMax;
         }

@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace MemoryProfilerWindow
 {
-    class CrawlDataUnpacker
+    internal class CrawlDataUnpacker
     {
-        public static CrawledMemorySnapshot Unpack(PackedCrawlerData packedCrawlerData)
+        internal static CrawledMemorySnapshot Unpack(PackedCrawlerData packedCrawlerData)
         {
             var packedSnapshot = packedCrawlerData.packedMemorySnapshot;
 
@@ -44,7 +44,7 @@ namespace MemoryProfilerWindow
             return result;
         }
 
-        static List<ThingInMemory>[] MakeTempLists(ThingInMemory[] combined)
+        private static List<ThingInMemory>[] MakeTempLists(ThingInMemory[] combined)
         {
             var referencesLists = new List<ThingInMemory>[combined.Length];
             for (int i = 0; i != referencesLists.Length; i++)
@@ -52,7 +52,7 @@ namespace MemoryProfilerWindow
             return referencesLists;
         }
 
-        static StaticFields UnpackStaticFields(TypeDescription typeDescription)
+        private static StaticFields UnpackStaticFields(TypeDescription typeDescription)
         {
             return new StaticFields()
                    {
@@ -62,18 +62,18 @@ namespace MemoryProfilerWindow
                    };
         }
 
-        static GCHandle UnpackGCHandle(PackedMemorySnapshot packedSnapshot)
+        private static GCHandle UnpackGCHandle(PackedMemorySnapshot packedSnapshot)
         {
             return new GCHandle() { size = packedSnapshot.virtualMachineInformation.pointerSize, caption = "gchandle" };
         }
 
-        static ManagedObject UnpackManagedObject(PackedMemorySnapshot packedSnapshot, PackedManagedObject pm)
+        private static ManagedObject UnpackManagedObject(PackedMemorySnapshot packedSnapshot, PackedManagedObject pm)
         {
             var typeDescription = packedSnapshot.typeDescriptions[pm.typeIndex];
             return new ManagedObject() { address = pm.address, size = pm.size, typeDescription = typeDescription, caption = typeDescription.name };
         }
 
-        static NativeUnityEngineObject UnpackNativeUnityEngineObject(PackedMemorySnapshot packedSnapshot, PackedNativeUnityEngineObject packedNativeUnityEngineObject)
+        private static NativeUnityEngineObject UnpackNativeUnityEngineObject(PackedMemorySnapshot packedSnapshot, PackedNativeUnityEngineObject packedNativeUnityEngineObject)
         {
 #if UNITY_5_6_OR_NEWER
             var classId = packedNativeUnityEngineObject.nativeTypeArrayIndex;
@@ -101,14 +101,14 @@ namespace MemoryProfilerWindow
     [System.Serializable]
     internal class PackedCrawlerData
     {
-        public bool valid;
-        public PackedMemorySnapshot packedMemorySnapshot;
-        public StartIndices startIndices;
-        public PackedManagedObject[] managedObjects;
-        public TypeDescription[] typesWithStaticFields;
-        public Connection[] connections;
+        internal bool valid;
+        internal PackedMemorySnapshot packedMemorySnapshot;
+        internal StartIndices startIndices;
+        internal PackedManagedObject[] managedObjects;
+        internal TypeDescription[] typesWithStaticFields;
+        internal Connection[] connections;
 
-        public PackedCrawlerData(PackedMemorySnapshot packedMemorySnapshot)
+        internal PackedCrawlerData(PackedMemorySnapshot packedMemorySnapshot)
         {
             this.packedMemorySnapshot = packedMemorySnapshot;
             typesWithStaticFields = packedMemorySnapshot.typeDescriptions.Where(t => t.staticFieldBytes != null && t.staticFieldBytes.Length > 0).ToArray();
@@ -127,16 +127,16 @@ namespace MemoryProfilerWindow
         [SerializeField]
         private int _staticFieldsCount;
 
-        public StartIndices(int gcHandleCount, int nativeObjectCount, int staticFieldsCount)
+        internal StartIndices(int gcHandleCount, int nativeObjectCount, int staticFieldsCount)
         {
             _gcHandleCount = gcHandleCount;
             _nativeObjectCount = nativeObjectCount;
             _staticFieldsCount = staticFieldsCount;
         }
 
-        public int OfFirstGCHandle { get { return 0; } }
-        public int OfFirstNativeObject { get { return OfFirstGCHandle + _gcHandleCount; } }
-        public int OfFirstStaticFields { get { return OfFirstNativeObject + _nativeObjectCount; } }
-        public int OfFirstManagedObject { get { return OfFirstStaticFields + _staticFieldsCount; } }
+        internal int OfFirstGCHandle { get { return 0; } }
+        internal int OfFirstNativeObject { get { return OfFirstGCHandle + _gcHandleCount; } }
+        internal int OfFirstStaticFields { get { return OfFirstNativeObject + _nativeObjectCount; } }
+        internal int OfFirstManagedObject { get { return OfFirstStaticFields + _staticFieldsCount; } }
     }
 }

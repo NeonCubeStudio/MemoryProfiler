@@ -10,19 +10,19 @@ using UnityEngine;
 
 namespace Assets.Editor.Treemap
 {
-    public class Item : IComparable<Item>, ITreemapRenderable
+    internal class Item : IComparable<Item>, ITreemapRenderable
     {
-        public Group _group;
-        public Rect _position;
-        public int _index;
+        internal Group _group;
+        internal Rect _position;
+        internal int _index;
 
-        public ThingInMemory _thingInMemory;
+        internal ThingInMemory _thingInMemory;
 
-        public long memorySize { get { return _thingInMemory.ignored ? 0 : _thingInMemory.size; } }
-        public string name { get { return _thingInMemory.caption; } }
-        public Color color { get { return _group.color; } }
+        internal long memorySize { get { return _thingInMemory.ignored ? 0 : _thingInMemory.size; } }
+        internal string name { get { return _thingInMemory.caption; } }
+        internal Color color { get { return _group.color; } }
 
-        public Item(ThingInMemory thingInMemory, Group group)
+        internal Item(ThingInMemory thingInMemory, Group group)
         {
             _thingInMemory = thingInMemory;
             _group = group;
