@@ -177,7 +177,7 @@ namespace MemoryProfilerWindow
                 _textureObject = null;
                 return;
             }
-            EditorGUILayout.HelpBox("Watching Texture Detail Data is only for Editor.", MessageType.Warning, true);
+            EditorGUILayout.HelpBox("Previewing Texture2D only works correctly when profiling inside the editor.", MessageType.Warning, true);
             if (_prevInstance != nativeObject.instanceID)
             {
                 // Attempt to match the texture to one in editor
@@ -193,7 +193,7 @@ namespace MemoryProfilerWindow
             }
             else
             {
-                EditorGUILayout.LabelField("Can't instance texture,maybe it was already released.");
+                EditorGUILayout.LabelField("Can't instance the texture, maybe it was already released.");
             }
         }
 
