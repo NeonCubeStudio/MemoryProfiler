@@ -80,7 +80,7 @@ namespace MemoryProfilerWindow
             if (m_hostWindow == null)
                 return;
 
-            Rect r = new Rect(0f, m_hostWindow.topMargin, m_hostWindow.position.width - m_hostWindow._inspector.width, m_hostWindow.position.height - m_hostWindow.topMargin);
+            Rect r = new Rect(m_hostWindow._viewCanvas._canvas.x, m_hostWindow._viewCanvas._canvas.y, m_hostWindow._viewCanvas._canvas.width, m_hostWindow._viewCanvas._canvas.height - m_hostWindow.topMargin);
             GUILayout.BeginArea(r);
 
             m_table.DoGUI();
