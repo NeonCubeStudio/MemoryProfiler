@@ -17,25 +17,25 @@ namespace MemoryProfilerWindow
 
         internal ThingInMemory[] FindFor(ThingInMemory thing)
         {
-            var seen = new HashSet<ThingInMemory>();
-            var queue = new Queue<List<ThingInMemory>>();
+            HashSet<ThingInMemory> seen = new HashSet<ThingInMemory>();
+            Queue<List<ThingInMemory>> queue = new Queue<List<ThingInMemory>>();
             queue.Enqueue(new List<ThingInMemory> { thing});
 
             while (queue.Any())
             {
-                var pop = queue.Dequeue();
-                var tip = pop.Last();
+                List<ThingInMemory> pop = queue.Dequeue();
+                ThingInMemory tip = pop.Last();
 
                 string reason;
                 if (IsRoot(tip, out reason))
                     return pop.ToArray();
 
-                foreach (var next in tip.referencedBy)
+                foreach (ThingInMemory next in tip.referencedBy)
                 {
                     if (seen.Contains(next))
                         continue;
                     seen.Add(next);
-                    var dupe = new List<ThingInMemory>(pop) {next};
+                    List<ThingInMemory> dupe = new List<ThingInMemory>(pop) {next};
                     queue.Enqueue(dupe);
                 }
             }
@@ -55,7 +55,7 @@ namespace MemoryProfilerWindow
             if (thing is GCHandle)
                 return false;
 
-            var nativeObject = thing as NativeUnityEngineObject;
+            NativeUnityEngineObject nativeObject = thing as NativeUnityEngineObject;
             if (nativeObject == null)
                 throw new ArgumentException("Unknown type: " + thing.GetType());
             if (nativeObject.isManager)
@@ -112,15 +112,15 @@ namespace MemoryProfilerWindow
 
         private bool IsComponent(int classID)
         {
-            var packedNativeType = _snapshot.nativeTypes[classID];
+            PackedNativeType packedNativeType = _snapshot.nativeTypes[classID];
 
             if (packedNativeType.name == "Component")
                 return true;
 
 #if UNITY_5_6_OR_NEWER
-            var baseClassID = packedNativeType.nativeBaseTypeArrayIndex;
+            int baseClassID = packedNativeType.nativeBaseTypeArrayIndex;
 #else
-            var baseClassID = packedNativeType.baseClassId;
+            int baseClassID = packedNativeType.baseClassId;
 #endif
 
             return baseClassID != -1 && IsComponent(baseClassID);

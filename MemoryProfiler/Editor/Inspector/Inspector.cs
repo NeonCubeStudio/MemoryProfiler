@@ -92,7 +92,7 @@ namespace MemoryProfilerWindow
                 GUILayout.Label("Select an object to see more info");
             else
             {
-                var nativeObject = _selectedThing as NativeUnityEngineObject;
+                NativeUnityEngineObject nativeObject = _selectedThing as NativeUnityEngineObject;
                 if (nativeObject != null)
                 {
                     GUILayout.Label("NativeUnityEngineObject", EditorStyles.boldLabel);
@@ -108,7 +108,7 @@ namespace MemoryProfilerWindow
                     DrawSpecificTexture2D(nativeObject);
                 }
 
-                var managedObject = _selectedThing as ManagedObject;
+                ManagedObject managedObject = _selectedThing as ManagedObject;
                 if (managedObject != null)
                 {
                     GUILayout.Label("ManagedObject");
@@ -132,7 +132,7 @@ namespace MemoryProfilerWindow
                     EditorGUILayout.LabelField("size", _selectedThing.size.ToString());
                 }
 
-                var staticFields = _selectedThing as StaticFields;
+                StaticFields staticFields = _selectedThing as StaticFields;
                 if (staticFields != null)
                 {
                     GUILayout.Label("Static Fields");
@@ -226,7 +226,7 @@ namespace MemoryProfilerWindow
 
         private void DrawArray(ManagedObject managedObject)
         {
-            var typeDescription = managedObject.typeDescription;
+            TypeDescription typeDescription = managedObject.typeDescription;
             int elementCount = ArrayTools.ReadArrayLength(_unpackedCrawl.managedHeap, managedObject.address, typeDescription, _unpackedCrawl.virtualMachineInformation);
             GUILayout.Label("element count: " + elementCount);
             int rank = typeDescription.arrayRank;
@@ -242,7 +242,7 @@ namespace MemoryProfilerWindow
                 return;
             }
 
-            var pointers = new List<UInt64>();
+            List<UInt64> pointers = new List<UInt64>();
             for (int i = 0; i != elementCount; i++)
             {
                 pointers.Add(_primitiveValueReader.ReadPointer(managedObject.address + (UInt64)_unpackedCrawl.virtualMachineInformation.arrayHeaderSize + (UInt64)(i * _unpackedCrawl.virtualMachineInformation.pointerSize)));
@@ -255,10 +255,10 @@ namespace MemoryProfilerWindow
         {
             int counter = 0;
         
-            foreach (var field in TypeTools.AllFieldsOf(typeDescription, _unpackedCrawl.typeDescriptions, useStatics ? TypeTools.FieldFindOptions.OnlyStatic : TypeTools.FieldFindOptions.OnlyInstance))
+            foreach (FieldDescription field in TypeTools.AllFieldsOf(typeDescription, _unpackedCrawl.typeDescriptions, useStatics ? TypeTools.FieldFindOptions.OnlyStatic : TypeTools.FieldFindOptions.OnlyInstance))
             {
                 counter++;
-                var gUIStyle = counter % 2 == 0 ? Styles.entryEven : Styles.entryOdd;
+                GUIStyle gUIStyle = counter % 2 == 0 ? Styles.entryEven : Styles.entryOdd;
                 gUIStyle.margin = new RectOffset(0, 0, 0, 0);
                 gUIStyle.overflow = new RectOffset(0, 0, 0, 0);
                 gUIStyle.padding = EditorStyles.label.padding;
@@ -282,7 +282,7 @@ namespace MemoryProfilerWindow
 
         private void DrawValueFor(FieldDescription field, BytesAndOffset bytesAndOffset)
         {
-            var typeDescription = _unpackedCrawl.typeDescriptions[field.typeIndex];
+            TypeDescription typeDescription = _unpackedCrawl.typeDescriptions[field.typeIndex];
 
             switch (typeDescription.name)
             {
@@ -366,17 +366,17 @@ namespace MemoryProfilerWindow
 
         private void DrawLinks(IEnumerable<ThingInMemory> thingInMemories)
         {
-            var c = GUI.backgroundColor;
+            Color c = GUI.backgroundColor;
             GUI.skin.button.alignment = TextAnchor.UpperLeft;
-            foreach (var rb in thingInMemories)
+            foreach (ThingInMemory rb in thingInMemories)
             {
                 EditorGUI.BeginDisabledGroup(rb == _selectedThing || rb == null);
 
                 GUI.backgroundColor = ColorFor(rb);
 
-                var caption = rb == null ? "null" : rb.caption;
+                string caption = rb == null ? "null" : rb.caption;
 
-                var managedObject = rb as ManagedObject;
+                ManagedObject managedObject = rb as ManagedObject;
                 if (managedObject != null && managedObject.typeDescription.name == "System.String")
                     caption = StringTools.ReadString(_unpackedCrawl.managedHeap.Find(managedObject.address, _unpackedCrawl.virtualMachineInformation), _unpackedCrawl.virtualMachineInformation);
 

@@ -60,17 +60,17 @@ namespace MemoryProfilerWindow
             _instanceFields = new FieldDescription[_typeDescriptions.Length][];
             _staticFields = new FieldDescription[_typeDescriptions.Length][];
 
-            foreach (var type in _typeDescriptions)
+            foreach (TypeDescription type in _typeDescriptions)
             {
                 _instanceFields[type.typeIndex] = TypeTools.AllFieldsOf(type, _typeDescriptions, TypeTools.FieldFindOptions.OnlyInstance).ToArray();
                 _staticFields[type.typeIndex] = TypeTools.AllFieldsOf(type, _typeDescriptions, TypeTools.FieldFindOptions.OnlyStatic).ToArray();
             }
 
-            var result = new PackedCrawlerData(input);
+            PackedCrawlerData result = new PackedCrawlerData(input);
 
-            var managedObjects = new List<PackedManagedObject>(result.startIndices.OfFirstManagedObject * 3);
+            List<PackedManagedObject> managedObjects = new List<PackedManagedObject>(result.startIndices.OfFirstManagedObject * 3);
 
-            var connections = new List<Connection>(managedObjects.Capacity * 3);
+            List<Connection> connections = new List<Connection>(managedObjects.Capacity * 3);
             //we will be adding a lot of connections, but the input format also already had connections. (nativeobject->nativeobject and nativeobject->gchandle). we'll add ours to the ones already there.
             connections.AddRange(input.connections);
 
@@ -82,13 +82,13 @@ namespace MemoryProfilerWindow
 
             for (int i = 0; i < result.typesWithStaticFields.Length; i++)
             {
-                var typeDescription = result.typesWithStaticFields[i];
+                TypeDescription typeDescription = result.typesWithStaticFields[i];
                 thingsToProfile.Push(new ThingToProfile(typeDescription, new BytesAndOffset { bytes = typeDescription.staticFieldBytes, offset = 0, pointerSize = _virtualMachineInformation.pointerSize }, true, result.startIndices.OfFirstStaticFields + i));
             }
 
             while (thingsToProfile.Count > 0)
             {
-                var thingToProfile = thingsToProfile.Pop();
+                ThingToProfile thingToProfile = thingsToProfile.Pop();
                 if(thingToProfile.type == PointerType.Reference)
                 {
                     CrawlPointerNonRecursive(input, result.startIndices, thingToProfile.objectPointer, thingToProfile.indexOfFrom, connections, managedObjects, thingsToProfile);
@@ -111,7 +111,7 @@ namespace MemoryProfilerWindow
             if (packedMemorySnapshot.typeDescriptions.Length == 0)
                 yield break;
 
-            var unityEngineObjectTypeDescription = packedMemorySnapshot.typeDescriptions.First(td => td.name == "UnityEngine.Object");
+            TypeDescription unityEngineObjectTypeDescription = packedMemorySnapshot.typeDescriptions.First(td => td.name == "UnityEngine.Object");
 
             bool unityEngineObjectHasInstanceIDField = unityEngineObjectTypeDescription.fields.Any(f => f.name == "m_InstanceID");
             int instanceIDOffset = -1;
@@ -120,15 +120,15 @@ namespace MemoryProfilerWindow
                 instanceIDOffset = unityEngineObjectTypeDescription.fields.Single(f => f.name == "m_InstanceID").offset;
 
 #if UNITY_5_4_OR_NEWER
-            var cachedPtrOffset = unityEngineObjectTypeDescription.fields.Single(f => f.name == "m_CachedPtr").offset;
+            int cachedPtrOffset = unityEngineObjectTypeDescription.fields.Single(f => f.name == "m_CachedPtr").offset;
 #endif
 
             for (int i = 0; i != packedCrawlerData.managedObjects.Length; i++)
             {
-                var managedObjectIndex = i + startIndices.OfFirstManagedObject;
-                var address = packedCrawlerData.managedObjects[i].address;
+                int managedObjectIndex = i + startIndices.OfFirstManagedObject;
+                UInt64 address = packedCrawlerData.managedObjects[i].address;
 
-                var typeDescription = RestoreObjectHeader(packedMemorySnapshot.managedHeapSections, address, managedObjectIndex);
+                TypeDescription typeDescription = RestoreObjectHeader(packedMemorySnapshot.managedHeapSections, address, managedObjectIndex);
 
                 if (!DerivesFrom(packedMemorySnapshot.typeDescriptions, typeDescription.typeIndex, unityEngineObjectTypeDescription.typeIndex))
                     continue;
@@ -136,14 +136,14 @@ namespace MemoryProfilerWindow
                 int indexOfNativeObject = -1;
                 if (unityEngineObjectHasInstanceIDField)
                 {
-                    var instanceID = packedMemorySnapshot.managedHeapSections.Find(address + (UInt64)instanceIDOffset, packedMemorySnapshot.virtualMachineInformation).ReadInt32();
+                    int instanceID = packedMemorySnapshot.managedHeapSections.Find(address + (UInt64)instanceIDOffset, packedMemorySnapshot.virtualMachineInformation).ReadInt32();
                     indexOfNativeObject = Array.FindIndex(packedMemorySnapshot.nativeObjects, no => no.instanceId == instanceID);
                 }
 #if UNITY_5_4_OR_NEWER // Since Unity 5.4, UnityEngine.Object no longer stores instance id inside when running in the player. Use cached ptr instead to find the index of native object
                 else
                 {
                     // If you get a compilation error on the following 2 lines, update to Unity 5.4b14.
-                    var cachedPtr = packedMemorySnapshot.managedHeapSections.Find(address + (UInt64)cachedPtrOffset, packedMemorySnapshot.virtualMachineInformation).ReadPointer();
+                    UInt64 cachedPtr = packedMemorySnapshot.managedHeapSections.Find(address + (UInt64)cachedPtrOffset, packedMemorySnapshot.virtualMachineInformation).ReadPointer();
                     indexOfNativeObject = Array.FindIndex(packedMemorySnapshot.nativeObjects, no => (ulong)no.nativeObjectAddress == cachedPtr);
                 }
 #endif
@@ -157,7 +157,7 @@ namespace MemoryProfilerWindow
         {
             if (typeIndex == potentialBase)
                 return true;
-            var baseIndex = typeDescriptions[typeIndex].baseOrElementTypeIndex;
+            int baseIndex = typeDescriptions[typeIndex].baseOrElementTypeIndex;
 
             if (baseIndex == -1)
                 return false;
@@ -174,8 +174,8 @@ namespace MemoryProfilerWindow
             {
                 // Mono has a vtable pointer as the first member of the object.
                 // The first member of the vtable is the class pointer.
-                var vtable = heap.Find(objectAddress, _virtualMachineInformation);
-                var vtableClassPointer = vtable.ReadPointer();
+                BytesAndOffset vtable = heap.Find(objectAddress, _virtualMachineInformation);
+                UInt64 vtableClassPointer = vtable.ReadPointer();
                 typeDescription = _typeInfoToTypeDescription[vtableClassPointer];
             }
 
@@ -184,10 +184,10 @@ namespace MemoryProfilerWindow
 
         private TypeDescription RestoreObjectHeader(MemorySection[] heaps, ulong address, int managedObjectIndex)
         {
-            var bo = heaps.Find(address, _virtualMachineInformation);
-            var mask = this._virtualMachineInformation.pointerSize == 8 ? System.UInt64.MaxValue - 1 : System.UInt32.MaxValue - 1;
-            var pointer = bo.ReadPointer();
-            var typeInfoAddress = pointer & mask;
+            BytesAndOffset bo = heaps.Find(address, _virtualMachineInformation);
+            UInt64 mask = this._virtualMachineInformation.pointerSize == 8 ? System.UInt64.MaxValue - 1 : System.UInt32.MaxValue - 1;
+            UInt64 pointer = bo.ReadPointer();
+            UInt64 typeInfoAddress = pointer & mask;
             bo.WritePointer(typeInfoAddress);
 
             UInt64 restoreValue = 0;
@@ -205,13 +205,13 @@ namespace MemoryProfilerWindow
             if (typeDescription.name.StartsWith("MemoryProfilerWindow."))
                 return;
 
-            var fields = useStaticFields ? _staticFields[typeDescription.typeIndex] : _instanceFields[typeDescription.typeIndex];
+            FieldDescription[] fields = useStaticFields ? _staticFields[typeDescription.typeIndex] : _instanceFields[typeDescription.typeIndex];
 
             for(int i = 0; i < fields.Length; ++i)
             {
-                var field = fields[i];
-                var fieldType = packedMemorySnapshot.typeDescriptions[field.typeIndex];
-                var fieldLocation = bytesAndOffset.Add(field.offset - (useStaticFields ? 0 : _virtualMachineInformation.objectHeaderSize));
+                FieldDescription field = fields[i];
+                TypeDescription fieldType = packedMemorySnapshot.typeDescriptions[field.typeIndex];
+                BytesAndOffset fieldLocation = bytesAndOffset.Add(field.offset - (useStaticFields ? 0 : _virtualMachineInformation.objectHeaderSize));
 
                 if(fieldType.isValueType)
                 {
@@ -243,7 +243,7 @@ namespace MemoryProfilerWindow
 
         private void CrawlPointerNonRecursive(PackedMemorySnapshot packedMemorySnapshot, StartIndices startIndices, ulong pointer, int indexOfFrom, List<Connection> out_connections, List<PackedManagedObject> out_managedObjects, Stack<ThingToProfile> out_thingsToProfile)
         {
-            var bo = packedMemorySnapshot.managedHeapSections.Find(pointer, _virtualMachineInformation);
+            BytesAndOffset bo = packedMemorySnapshot.managedHeapSections.Find(pointer, _virtualMachineInformation);
             if (!bo.IsValid)
                 return;
 
@@ -265,7 +265,7 @@ namespace MemoryProfilerWindow
             if (wasAlreadyCrawled)
                 return;
 
-            var typeDescription = _typeInfoToTypeDescription[typeInfoAddress];
+            TypeDescription typeDescription = _typeInfoToTypeDescription[typeInfoAddress];
 
             if (!typeDescription.isArray)
             {
@@ -273,9 +273,9 @@ namespace MemoryProfilerWindow
                 return;
             }
 
-            var arrayLength = ArrayTools.ReadArrayLength(packedMemorySnapshot.managedHeapSections, pointer, typeDescription, _virtualMachineInformation);
-            var elementType = packedMemorySnapshot.typeDescriptions[typeDescription.baseOrElementTypeIndex];
-            var cursor = bo.Add(_virtualMachineInformation.arrayHeaderSize);
+            int arrayLength = ArrayTools.ReadArrayLength(packedMemorySnapshot.managedHeapSections, pointer, typeDescription, _virtualMachineInformation);
+            TypeDescription elementType = packedMemorySnapshot.typeDescriptions[typeDescription.baseOrElementTypeIndex];
+            BytesAndOffset cursor = bo.Add(_virtualMachineInformation.arrayHeaderSize);
             for (int i = 0; i != arrayLength; i++)
             {
                 if (elementType.isValueType)
@@ -305,10 +305,10 @@ namespace MemoryProfilerWindow
 
         private void ParseObjectHeader(StartIndices startIndices, MemorySection[] heap, ulong originalHeapAddress, out ulong typeInfoAddress, out int indexOfObject, out bool wasAlreadyCrawled, List<PackedManagedObject> outManagedObjects)
         {
-            var bo = heap.Find(originalHeapAddress, _virtualMachineInformation);
+            BytesAndOffset bo = heap.Find(originalHeapAddress, _virtualMachineInformation);
 
-            var pointer1 = bo.ReadPointer();
-            var pointer2 = bo.NextPointer();
+            UInt64 pointer1 = bo.ReadPointer();
+            BytesAndOffset pointer2 = bo.NextPointer();
 
             if (HasMarkBit(pointer1) == 0)
             {
@@ -318,7 +318,7 @@ namespace MemoryProfilerWindow
                 indexOfObject = outManagedObjects.Count + startIndices.OfFirstManagedObject;
                 typeInfoAddress = typeDescription.typeInfoAddress;
 
-                var size = SizeOfObjectInBytes(typeDescription, bo, heap, originalHeapAddress);
+                int size = SizeOfObjectInBytes(typeDescription, bo, heap, originalHeapAddress);
 
                 outManagedObjects.Add(new PackedManagedObject() { address = originalHeapAddress, size = size, typeIndex = typeDescription.typeIndex });
 
@@ -329,7 +329,7 @@ namespace MemoryProfilerWindow
                 ulong magic = bo.pointerSize == 8 ? 0x12345678deadbeefUL : 0xdeadbeef;
 
                 pointer2.WritePointer(magic);
-                var check = pointer2.ReadPointer();
+                UInt64 check = pointer2.ReadPointer();
                 if (check != magic)
                     throw new Exception("writepointer broken");
 

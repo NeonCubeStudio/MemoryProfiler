@@ -7,9 +7,9 @@ namespace MemoryProfilerWindow
     {
         internal static int ReadArrayLength(MemorySection[] heap, UInt64 address, TypeDescription arrayType, VirtualMachineInformation virtualMachineInformation)
         {
-            var bo = heap.Find(address, virtualMachineInformation);
+            BytesAndOffset bo = heap.Find(address, virtualMachineInformation);
 
-            var bounds = bo.Add(virtualMachineInformation.arrayBoundsOffsetInHeader).ReadPointer();
+            UInt64 bounds = bo.Add(virtualMachineInformation.arrayBoundsOffsetInHeader).ReadPointer();
 
             if (bounds == 0)
 #if UNITY_2017_2_OR_NEWER
@@ -18,7 +18,7 @@ namespace MemoryProfilerWindow
                 return bo.Add(virtualMachineInformation.arraySizeOffsetInHeader).ReadInt32();
 #endif
 
-            var cursor = heap.Find(bounds, virtualMachineInformation);
+            BytesAndOffset cursor = heap.Find(bounds, virtualMachineInformation);
             int length = 1;
             for (int i = 0; i != arrayType.arrayRank; i++)
             {
@@ -35,9 +35,9 @@ namespace MemoryProfilerWindow
 
         internal static int ReadArrayObjectSizeInBytes(MemorySection[] heap, UInt64 address, TypeDescription arrayType, TypeDescription[] typeDescriptions, VirtualMachineInformation virtualMachineInformation)
         {
-            var arrayLength = ArrayTools.ReadArrayLength(heap, address, arrayType, virtualMachineInformation);
-            var elementType = typeDescriptions[arrayType.baseOrElementTypeIndex];
-            var elementSize = elementType.isValueType ? elementType.size : virtualMachineInformation.pointerSize;
+            int arrayLength = ArrayTools.ReadArrayLength(heap, address, arrayType, virtualMachineInformation);
+            TypeDescription elementType = typeDescriptions[arrayType.baseOrElementTypeIndex];
+            int elementSize = elementType.isValueType ? elementType.size : virtualMachineInformation.pointerSize;
             return virtualMachineInformation.arrayHeaderSize + elementSize * arrayLength;
         }
     }

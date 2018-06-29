@@ -67,7 +67,7 @@ namespace MemoryProfilerWindow
 
 		private void ApplyFilters()
 		{
-			foreach (var thing in _unpackedCrawl.allObjects)
+			foreach (ThingInMemory thing in _unpackedCrawl.allObjects)
 				thing.ignored = false;
 
 			if ((_currentFilter & Filters.IgnoreUnused) != 0)
@@ -84,7 +84,7 @@ namespace MemoryProfilerWindow
 			HashSet<ThingInMemory> matches = new HashSet<ThingInMemory>();
 			Queue<ThingInMemory> references = new Queue<ThingInMemory>();
 
-			foreach ( var thing in _unpackedCrawl.allObjects )
+			foreach (ThingInMemory thing in _unpackedCrawl.allObjects )
 			{
 				string reason;
 				if (_hostWindow._inspector._shortestPathToRootFinder.IsRoot(thing, out reason))
@@ -96,9 +96,9 @@ namespace MemoryProfilerWindow
 
 			while (references.Count > 0)
 			{
-				var thing = references.Dequeue();
+                ThingInMemory thing = references.Dequeue();
 
-				foreach (var item in thing.references)
+				foreach (ThingInMemory item in thing.references)
 				{
 					if (!matches.Contains(item))
 					{
@@ -108,7 +108,7 @@ namespace MemoryProfilerWindow
 				}
 			}
 
-			foreach (var thing in _unpackedCrawl.allObjects)
+			foreach (ThingInMemory thing in _unpackedCrawl.allObjects)
 			{
 				if (!matches.Contains(thing))
 					thing.ignored = true;
@@ -121,14 +121,14 @@ namespace MemoryProfilerWindow
                 return;
 
             HashSet<int> oldNativeIDs = new HashSet<int>(_previousUnpackedCrawl.nativeObjects.Select(obj => obj.instanceID));
-			foreach (var thing in _unpackedCrawl.nativeObjects)
+			foreach (NativeUnityEngineObject thing in _unpackedCrawl.nativeObjects)
 			{
 				if (oldNativeIDs.Contains(thing.instanceID))
 					thing.ignored = true;
 			}
 
 			HashSet<UInt64> oldManagedObjects = new HashSet<UInt64>(_previousUnpackedCrawl.managedObjects.Select(obj => obj.address));
-			foreach (var thing in _unpackedCrawl.managedObjects)
+			foreach (ManagedObject thing in _unpackedCrawl.managedObjects)
 			{
 				if (oldManagedObjects.Contains(thing.address))
 					thing.ignored = true;

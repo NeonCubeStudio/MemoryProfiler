@@ -9,9 +9,9 @@ namespace MemoryProfilerWindow
     {
         internal static CrawledMemorySnapshot Unpack(PackedCrawlerData packedCrawlerData)
         {
-            var packedSnapshot = packedCrawlerData.packedMemorySnapshot;
+            PackedMemorySnapshot packedSnapshot = packedCrawlerData.packedMemorySnapshot;
 
-            var result = new CrawledMemorySnapshot
+            CrawledMemorySnapshot result = new CrawledMemorySnapshot
             {
                 nativeObjects = packedSnapshot.nativeObjects.Select(packedNativeUnityEngineObject => UnpackNativeUnityEngineObject(packedSnapshot, packedNativeUnityEngineObject)).ToArray(),
                 managedObjects = packedCrawlerData.managedObjects.Select(pm => UnpackManagedObject(packedSnapshot, pm)).ToArray(),
@@ -25,16 +25,16 @@ namespace MemoryProfilerWindow
 
             result.FinishSnapshot();
 
-            var referencesLists = MakeTempLists(result.allObjects);
-            var referencedByLists = MakeTempLists(result.allObjects);
+            List<ThingInMemory>[] referencesLists = MakeTempLists(result.allObjects);
+            List<ThingInMemory>[] referencedByLists = MakeTempLists(result.allObjects);
 
-            foreach (var connection in packedCrawlerData.connections)
+            foreach (Connection connection in packedCrawlerData.connections)
             {
                 referencesLists[connection.@from].Add(result.allObjects[connection.to]);
                 referencedByLists[connection.to].Add(result.allObjects[connection.@from]);
             }
 
-            for (var i = 0; i != result.allObjects.Length; i++)
+            for (int i = 0; i != result.allObjects.Length; i++)
             {
                 result.allObjects[i].references = referencesLists[i].ToArray();
                 result.allObjects[i].referencedBy = referencedByLists[i].ToArray();
@@ -45,7 +45,7 @@ namespace MemoryProfilerWindow
 
         private static List<ThingInMemory>[] MakeTempLists(ThingInMemory[] combined)
         {
-            var referencesLists = new List<ThingInMemory>[combined.Length];
+            List<ThingInMemory>[] referencesLists = new List<ThingInMemory>[combined.Length];
             for (int i = 0; i != referencesLists.Length; i++)
                 referencesLists[i] = new List<ThingInMemory>(4);
             return referencesLists;
@@ -68,18 +68,18 @@ namespace MemoryProfilerWindow
 
         private static ManagedObject UnpackManagedObject(PackedMemorySnapshot packedSnapshot, PackedManagedObject pm)
         {
-            var typeDescription = packedSnapshot.typeDescriptions[pm.typeIndex];
+            TypeDescription typeDescription = packedSnapshot.typeDescriptions[pm.typeIndex];
             return new ManagedObject() { address = pm.address, size = pm.size, typeDescription = typeDescription, caption = typeDescription.name };
         }
 
         private static NativeUnityEngineObject UnpackNativeUnityEngineObject(PackedMemorySnapshot packedSnapshot, PackedNativeUnityEngineObject packedNativeUnityEngineObject)
         {
 #if UNITY_5_6_OR_NEWER
-            var classId = packedNativeUnityEngineObject.nativeTypeArrayIndex;
+            int classId = packedNativeUnityEngineObject.nativeTypeArrayIndex;
 #else
-            var classId = packedNativeUnityEngineObject.classId;
+            int classId = packedNativeUnityEngineObject.classId;
 #endif
-            var className = packedSnapshot.nativeTypes[classId].name;
+            string className = packedSnapshot.nativeTypes[classId].name;
 
             return new NativeUnityEngineObject()
                    {

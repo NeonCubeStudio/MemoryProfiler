@@ -18,12 +18,12 @@ namespace MemoryProfilerWindow
 			
 			if (findOptions != FieldFindOptions.OnlyStatic && typeDescription.baseOrElementTypeIndex != -1 && !typeDescription.isValueType)
 			{
-				var baseTypeDescription = typeDescriptions [typeDescription.baseOrElementTypeIndex];
-				foreach(var field in AllFieldsOf(baseTypeDescription, typeDescriptions, findOptions))
+                TypeDescription baseTypeDescription = typeDescriptions [typeDescription.baseOrElementTypeIndex];
+				foreach(FieldDescription field in AllFieldsOf(baseTypeDescription, typeDescriptions, findOptions))
 					yield return field;
 			}
 
-			foreach (var field in typeDescription.fields)
+			foreach (FieldDescription field in typeDescription.fields)
 			{
 				if (!FieldMatchesOptions(field, findOptions))
 					continue;

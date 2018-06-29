@@ -195,10 +195,10 @@ namespace MemoryProfilerWindow
 		{
 			Event evt = Event.current;
 
-			var rowRect = GetRowRect(row);
-			var curRect = rowRect;
+			Rect rowRect = GetRowRect(row);
+			Rect curRect = rowRect;
 
-			var background = GetRowBackgroundStyle(row);
+			GUIStyle background = GetRowBackgroundStyle(row);
 
 			if (evt.type == EventType.Repaint)
 			{

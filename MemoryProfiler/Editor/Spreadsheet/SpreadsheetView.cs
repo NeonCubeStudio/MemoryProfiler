@@ -107,7 +107,7 @@ namespace MemoryProfilerWindow
         {
             string str = "undefined";
             ThingInMemory thing = m_unpackedCrawl.allObjects[id];
-            var nativeObject = thing as NativeUnityEngineObject;
+            NativeUnityEngineObject nativeObject = thing as NativeUnityEngineObject;
 
             switch ((Column)col)
             {
@@ -140,10 +140,10 @@ namespace MemoryProfilerWindow
         private int CompareData(int id1, int id2, int col)
         {
             ThingInMemory thing1 = m_unpackedCrawl.allObjects[id1];
-            var nativeObject1 = thing1 as NativeUnityEngineObject;
+            NativeUnityEngineObject nativeObject1 = thing1 as NativeUnityEngineObject;
 
             ThingInMemory thing2 = m_unpackedCrawl.allObjects[id2];
-            var nativeObject2 = thing2 as NativeUnityEngineObject;
+            NativeUnityEngineObject nativeObject2 = thing2 as NativeUnityEngineObject;
 
             switch ((Column)col)
             {

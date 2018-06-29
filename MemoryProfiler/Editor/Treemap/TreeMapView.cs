@@ -238,7 +238,7 @@ namespace MemoryProfilerWindow
                 vertices[index++] = new Vector3(item.GetPosition().xMin, item.GetPosition().yMax, 0f);
 
                 index = meshItemIndex * 4;
-                var color = item.GetColor();
+                Color color = item.GetColor();
                 if (item == _selectedItem)
                     color *= 1.5f;
 

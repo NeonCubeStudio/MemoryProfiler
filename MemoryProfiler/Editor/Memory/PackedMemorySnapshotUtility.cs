@@ -1,4 +1,5 @@
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.MemoryProfiler;
@@ -18,7 +19,7 @@ namespace MemoryProfilerWindow
 
         internal static void SaveToFile(PackedMemorySnapshot snapshot)
         {
-            var filePath = EditorUtility.SaveFilePanel("Save Snapshot", previousDirectory, "MemorySnapshot", "memsnap2");
+            string filePath = EditorUtility.SaveFilePanel("Save Snapshot", previousDirectory, "MemorySnapshot", "memsnap2");
             if (string.IsNullOrEmpty(filePath))
                 return;
 
@@ -37,7 +38,7 @@ namespace MemoryProfilerWindow
             Profiler.BeginSample("PackedMemorySnapshotUtility.SaveToFile");
             stopwatch.Start();
 
-            var json = JsonUtility.ToJson(snapshot);
+            string json = JsonUtility.ToJson(snapshot);
             File.WriteAllText(filePath, json);
 
             stopwatch.Stop();
@@ -47,7 +48,7 @@ namespace MemoryProfilerWindow
 
         internal static PackedMemorySnapshot LoadFromFile()
         {
-            var filePath = EditorUtility.OpenFilePanelWithFilters("Load Snapshot", previousDirectory, new[] { "Snapshots", "memsnap2,memsnap" });
+            string filePath = EditorUtility.OpenFilePanelWithFilters("Load Snapshot", previousDirectory, new[] { "Snapshots", "memsnap2,memsnap" });
             if (string.IsNullOrEmpty(filePath))
                 return null;
 
@@ -66,7 +67,7 @@ namespace MemoryProfilerWindow
                 Profiler.BeginSample("PackedMemorySnapshotUtility.LoadFromFile(json)");
                 stopwatch.Start();
 
-                var json = File.ReadAllText(filePath);
+                string json = File.ReadAllText(filePath);
                 result = JsonUtility.FromJson<PackedMemorySnapshot>(json);
 
                 stopwatch.Stop();
@@ -77,7 +78,7 @@ namespace MemoryProfilerWindow
                 Profiler.BeginSample("PackedMemorySnapshotUtility.LoadFromFile(binary)");
                 stopwatch.Start();
 
-                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
                 using (Stream stream = File.Open(filePath, FileMode.Open))
                 {
                     result = binaryFormatter.Deserialize(stream) as PackedMemorySnapshot;

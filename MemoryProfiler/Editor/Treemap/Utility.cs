@@ -21,7 +21,7 @@ namespace Treemap
             float totalOutputArea = targetRect.width * targetRect.height;
             bool vertical = targetRect.width > targetRect.height;
 
-            var unfinishedRects = new List<Rect>();
+            List<Rect> unfinishedRects = new List<Rect>();
 
             for (int index = 0; index < values.Length; index++)
             {
