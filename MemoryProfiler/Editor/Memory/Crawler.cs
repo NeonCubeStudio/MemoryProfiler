@@ -324,15 +324,6 @@ namespace MemoryProfilerWindow
 
                 //okay, we gathered all information, now lets set the mark bit, and store the index for this object in the 2nd pointer of the header, which is rarely used.
                 bo.WritePointer(pointer1 | 1);
-
-                //test writepointer implementation
-                ulong magic = bo.pointerSize == 8 ? 0x12345678deadbeefUL : 0xdeadbeef;
-
-                pointer2.WritePointer(magic);
-                UInt64 check = pointer2.ReadPointer();
-                if (check != magic)
-                    throw new Exception("writepointer broken");
-
                 pointer2.WritePointer((ulong)indexOfObject);
                 return;
             }
