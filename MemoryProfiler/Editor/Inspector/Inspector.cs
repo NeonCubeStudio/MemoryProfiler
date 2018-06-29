@@ -14,7 +14,7 @@ namespace MemoryProfilerWindow
         private ThingInMemory _selectedThing;
         private ThingInMemory[] _shortestPath;
         internal ShortestPathToRootFinder _shortestPathToRootFinder;
-        private static int s_InspectorWidth = 400;
+        internal readonly int width = 400;
         private Vector2 _scrollPosition;
         private MemoryProfilerWindow _hostWindow;
         private CrawledMemorySnapshot _unpackedCrawl;
@@ -41,11 +41,6 @@ namespace MemoryProfilerWindow
             _primitiveValueReader = new PrimitiveValueReader(_unpackedCrawl.virtualMachineInformation, _unpackedCrawl.managedHeap);
         }
 
-        internal float width
-        {
-            get { return s_InspectorWidth; }
-        }
-
         internal void SelectThing(ThingInMemory thing)
         {
             _selectedThing = thing;
@@ -58,7 +53,7 @@ namespace MemoryProfilerWindow
 
         internal void Draw()
         {
-            GUILayout.BeginArea(new Rect(_hostWindow.position.width - s_InspectorWidth, _hostWindow.topMargin, s_InspectorWidth, _hostWindow.position.height - _hostWindow.topMargin));
+            GUILayout.BeginArea(new Rect(_hostWindow.position.width - width, _hostWindow.topMargin, width, _hostWindow.position.height - _hostWindow.topMargin));
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
 
             GUILayout.BeginHorizontal();
