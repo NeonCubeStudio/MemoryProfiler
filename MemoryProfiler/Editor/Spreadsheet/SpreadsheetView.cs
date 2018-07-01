@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 
 namespace MemoryProfilerWindow
@@ -221,3 +222,4 @@ namespace MemoryProfilerWindow
         }
     }
 }
+#endif

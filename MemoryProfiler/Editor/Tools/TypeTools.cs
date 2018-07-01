@@ -1,4 +1,5 @@
-﻿using UnityEditor.MemoryProfiler;
+﻿#if UNITY_EDITOR
+using UnityEditor.MemoryProfiler;
 using System.Collections.Generic;
 
 namespace MemoryProfilerWindow
@@ -57,3 +58,4 @@ namespace MemoryProfilerWindow
 	}
 }
 
+#endif

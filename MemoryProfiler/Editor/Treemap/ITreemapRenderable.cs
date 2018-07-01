@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 
 namespace Treemap
@@ -9,3 +10,4 @@ namespace Treemap
         string GetLabel();
     }
 }
+#endif

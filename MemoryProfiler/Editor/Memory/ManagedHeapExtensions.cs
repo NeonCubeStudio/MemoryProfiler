@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using UnityEditor.MemoryProfiler;
 
@@ -15,3 +16,4 @@ namespace MemoryProfilerWindow
         }
     }
 }
+#endif

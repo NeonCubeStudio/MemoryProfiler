@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using Treemap;
 using UnityEditor;
 using UnityEngine;
@@ -154,3 +155,4 @@ namespace MemoryProfilerWindow
         }
     }
 }
+#endif

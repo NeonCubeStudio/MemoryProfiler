@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 
 namespace MemoryProfilerWindow
@@ -10,3 +11,4 @@ namespace MemoryProfilerWindow
         internal int size;
     }
 }
+#endif

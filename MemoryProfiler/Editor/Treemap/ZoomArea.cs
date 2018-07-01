@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
@@ -594,3 +595,4 @@ internal class ZoomArea
         return shownArea.width / rect.width;
     }
 }
+#endif
